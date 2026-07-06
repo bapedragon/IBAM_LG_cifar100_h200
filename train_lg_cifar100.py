@@ -10,16 +10,62 @@ recipe in particular).
 from __future__ import annotations
 
 import argparse
+import importlib
+import importlib.util
 import json
 import math
 import os
 import random
+import subprocess
 import sys
 import time
 import traceback
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
+
+
+TIMM_VERSION = "1.0.27"
+
+
+def boot_log(message: str) -> None:
+    """Print before third-party imports so Jenkins can locate startup stalls."""
+    print(message, flush=True)
+
+
+def ensure_timm() -> None:
+    """Install timm inside the H200 container when it is not already present."""
+    if importlib.util.find_spec("timm") is not None:
+        boot_log("[BOOT] timm is already available")
+        return
+
+    boot_log(f"[BOOT] timm not found; installing timm=={TIMM_VERSION}")
+    command = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check",
+        "--no-input",
+        "--timeout",
+        "30",
+        "--retries",
+        "2",
+        "--quiet",
+        f"timm=={TIMM_VERSION}",
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as error:
+        boot_log(f"[BOOT][FATAL] Automatic timm installation failed: {error}")
+        raise
+    importlib.invalidate_caches()
+    boot_log("[BOOT] timm installation completed")
+
+
+boot_log(f"[BOOT] Python process started: {sys.executable}")
+ensure_timm()
+boot_log("[BOOT] Importing PyTorch, torchvision, and timm")
 
 import timm
 import torch
@@ -30,6 +76,8 @@ from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import transforms
 from torchvision.datasets import CIFAR100
 from torchvision.transforms import InterpolationMode
+
+boot_log("[BOOT] Core imports completed")
 
 
 CIFAR100_MEAN = (0.5071, 0.4867, 0.4408)
@@ -267,12 +315,17 @@ def build_loaders(
     args: argparse.Namespace, device: torch.device
 ) -> Tuple[DataLoader[Any], DataLoader[Any]]:
     train_transform, test_transform = make_transforms(args.image_size)
+    log(f"[DATA] CIFAR-100 root={args.data_dir.resolve()}")
+    log("[DATA] Preparing train split; download starts now if files are absent")
     train_dataset: Dataset[Any] = CIFAR100(
         root=args.data_dir, train=True, transform=train_transform, download=True
     )
+    log(f"[DATA] Train split ready: samples={len(train_dataset)}")
+    log("[DATA] Preparing test split; download starts now if files are absent")
     test_dataset: Dataset[Any] = CIFAR100(
         root=args.data_dir, train=False, transform=test_transform, download=True
     )
+    log(f"[DATA] Test split ready: samples={len(test_dataset)}")
 
     if args.smoke:
         train_dataset = deterministic_subset(train_dataset, args.smoke_train_samples, args.seed)

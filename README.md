@@ -49,6 +49,10 @@ remaining declared dependencies if the runner does not do so automatically:
 pip install -r requirements.txt
 ```
 
+For the H200 Issue runner, `train_lg_cifar100.py` checks for `timm` at startup
+and automatically installs `timm==1.0.27` when it is absent. The Issue command
+therefore only needs to invoke the training file.
+
 ## Smoke test
 
 The smoke mode uses deterministic subsets (1,024 training and 512 test images
@@ -95,6 +99,8 @@ outputs are saved under `./outputs/lg_cifar100_deit_tiny_full/`.
 The script prints and flushes the information needed in an Issue/Jenkins
 report:
 
+- Python process start, dependency check/install, and core import completion
+- CIFAR-100 train/test download start and completion
 - Python, PyTorch, torchvision, and timm versions
 - CUDA availability, GPU count/name/memory, and AMP state
 - batch size, epoch counts, dataset sizes, seed, and output paths
@@ -113,29 +119,20 @@ Each run saves:
 
 ### First smoke run
 
-- **Title:** `[Smoke] LG CIFAR-100 ResNet56 -> DeiT-Ti (bapedragon)`
+- **Title:** `[Request]: 박철현 LG CIFAR-100 H200 test run`
 - **사용자 ID:** `bapedragon`
-- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200`
+- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200.git`
 - **실행 명령어:** `python train_lg_cifar100.py --smoke --teacher-epochs 1 --student-epochs 1 --batch-size 64 --num-workers 2`
 - **사용 이미지:** `pytorch/pytorch:latest`
 - **사용 언어:** `Python`
 - **GPU 할당량:** `1`
-- **추가 필요 모듈:** `timm==1.0.27`
 
 ### Full 300-epoch run (after smoke succeeds)
 
-- **Title:** `[Full] LG CIFAR-100 ResNet56 -> DeiT-Ti 300ep (bapedragon)`
+- **Title:** `[Request]: 박철현 LG CIFAR-100 H200 300-epoch run`
 - **사용자 ID:** `bapedragon`
-- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200`
+- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200.git`
 - **실행 명령어:** `python train_lg_cifar100.py --teacher-epochs 300 --student-epochs 300 --batch-size 128 --num-workers 4`
 - **사용 이미지:** `pytorch/pytorch:latest`
 - **사용 언어:** `Python`
 - **GPU 할당량:** `7`
-- **추가 필요 모듈:** `timm==1.0.27`
-
-If the H200 runner does not automatically install `requirements.txt`, use a
-single command such as:
-
-```bash
-pip install -r requirements.txt && python train_lg_cifar100.py --smoke --teacher-epochs 1 --student-epochs 1 --batch-size 64 --num-workers 2
-```
