@@ -31,6 +31,8 @@ The full run should now be submitted without `--smoke`.
 ## Files
 
 - `train_lg_cifar100.py`: full training script
+- `train_teacher_cifar100.py`: teacher-only ResNet56 training and optional
+  GitHub artifact upload script
 - `eval_lg_deit_cifar100.py`: evaluates an already-trained LG/pycls DeiT-Tiny
   `.pyth` checkpoint on CIFAR-100
 - `requirements.txt`: declared Python dependencies
@@ -79,6 +81,45 @@ Note: the downloaded `deit-ti_c100_LG.pyth` checkpoint inspected locally records
 `test_err=21.85`, i.e. Top-1 `78.15%`, inside the checkpoint metadata. The
 evaluation result should be close to the checkpoint's recorded Top-1 if the
 evaluation transform matches the original code.
+
+## Teacher-only training and GitHub upload
+
+Use `train_teacher_cifar100.py` when a reusable ResNet56 teacher checkpoint is
+needed before LG/ALG/Ours student training. This script does not import `timm`
+and does not train the student.
+
+Teacher smoke/upload test:
+
+```bash
+python train_teacher_cifar100.py --smoke --teacher-epochs 2 --batch-size 128 --num-workers 4 --upload-to-github --github-token "YOUR_1DAY_GITHUB_TOKEN" --upload-every-n-epochs 1
+```
+
+The token is never printed or saved by the script. If the token is pasted into
+an H200 Issue command, use a short-lived fine-grained token scoped only to this
+repository, then revoke it after the run.
+
+The smoke run uploads:
+
+```text
+teacher_checkpoints/teacher_resnet56_cifar100_smoke/teacher_resnet56_best.pt
+teacher_checkpoints/teacher_resnet56_cifar100_smoke/teacher_resnet56_latest.pt
+teacher_checkpoints/teacher_resnet56_cifar100_smoke/summary.json
+```
+
+Full teacher run:
+
+```bash
+python train_teacher_cifar100.py --teacher-epochs 300 --batch-size 128 --num-workers 4 --upload-to-github --github-token "YOUR_1DAY_GITHUB_TOKEN" --upload-every-n-epochs 10
+```
+
+The important log lines are:
+
+```text
+[TEACHER][001/300] ... time=... avg_epoch=... est_300=...
+[FINAL_RESULT] teacher_best_top1=... reference_teacher_top1=70.43% ...
+[TIMING] teacher_avg_epoch=... estimated_300_teacher=...
+[UPLOAD] remote_best=github://bapedragon/IBAM_LG_cifar100_h200/teacher_checkpoints/...
+```
 
 ## Full H200 run
 
@@ -267,4 +308,33 @@ If the checkpoint is hosted at a direct URL:
 - **사용 이미지:** `pytorch/pytorch:latest`
 - **사용 언어:** `Python`
 - **GPU 할당량:** `1`
+- **추가 필요 모듈:** 없음
+
+### Teacher smoke/upload issue values
+
+Use this first to confirm that H200 can train the teacher and upload the
+checkpoint/summary back to GitHub.
+
+- **Title:** `[Request]: 박철현 ResNet56 CIFAR-100 teacher smoke upload`
+- **사용자 ID:** `bapedragon`
+- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200.git`
+- **실행 명령어:** `python train_teacher_cifar100.py --smoke --teacher-epochs 2 --batch-size 128 --num-workers 4 --upload-to-github --github-token "YOUR_1DAY_GITHUB_TOKEN" --upload-every-n-epochs 1`
+- **사용 이미지:** `pytorch/pytorch:latest`
+- **사용 언어:** `Python`
+- **GPU 할당량:** `7`
+- **추가 필요 모듈:** 없음
+
+### Teacher full 300-epoch issue values
+
+Run this only after the smoke/upload path is confirmed. A short-lived token is
+recommended. The command uploads intermediate latest/best checkpoints every 10
+epochs and uploads final artifacts at the end.
+
+- **Title:** `[Request]: 박철현 ResNet56 CIFAR-100 teacher 300-epoch run`
+- **사용자 ID:** `bapedragon`
+- **GitHub 링크:** `https://github.com/bapedragon/IBAM_LG_cifar100_h200.git`
+- **실행 명령어:** `python train_teacher_cifar100.py --teacher-epochs 300 --batch-size 128 --num-workers 4 --upload-to-github --github-token "YOUR_1DAY_GITHUB_TOKEN" --upload-every-n-epochs 10`
+- **사용 이미지:** `pytorch/pytorch:latest`
+- **사용 언어:** `Python`
+- **GPU 할당량:** `7`
 - **추가 필요 모듈:** 없음
