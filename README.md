@@ -1,4 +1,84 @@
-# IBAM LG-style CIFAR-100 H200 full training
+# IBAM teacher/KD H200 scaffold
+
+This repository is an H200-ready scaffold for the IBAM/iBKD experiment workflow.
+The current goal is to train and collect reusable ResNet56 teacher checkpoints
+for each dataset, then reuse those fixed teachers for KD/ALG/Ours student
+experiments.
+
+Current public GitHub repo:
+
+```text
+https://github.com/bapedragon/IBAM_teacher_KD_H200.git
+```
+
+## Teacher checkpoint status
+
+| Dataset | Teacher | Status | Current Top-1 | Paper teacher Top-1 | Artifact |
+|---|---|---:|---:|---:|---|
+| CIFAR-100 | ResNet56 | Done | 68.68% | 70.43% | `teacher_resnet56_best.pt` collected |
+| Flowers | ResNet56 | Next | - | 66.33% | pending |
+| Chaoyang | ResNet56 | Pending | - | 77.20% | pending |
+
+## Teacher scripts
+
+- `train_teacher_cifar100.py`: CIFAR-100 ResNet56 teacher training.
+- `train_teacher_flowers.py`: Oxford Flowers 102 ResNet56 teacher training.
+
+All H200 teacher runs should save artifacts under `/app/output` because this is
+the output path collected by the H200 runner.
+
+### Flowers 2-epoch output/timing test
+
+Run this first before the full 300-epoch Flowers teacher job:
+
+```bash
+python train_teacher_flowers.py --teacher-epochs 2 --batch-size 128 --num-workers 4 --run-name teacher_resnet56_flowers_output_test_2ep --output-dir /app/output
+```
+
+Expected output files:
+
+```text
+/app/output/teacher_resnet56_flowers_output_test_2ep/teacher_resnet56_flowers_best.pt
+/app/output/teacher_resnet56_flowers_output_test_2ep/teacher_resnet56_flowers_latest.pt
+/app/output/teacher_resnet56_flowers_output_test_2ep/summary.json
+```
+
+### Flowers full teacher run
+
+After the 2-epoch test confirms that download, training, and `/app/output`
+collection work:
+
+```bash
+python train_teacher_flowers.py --teacher-epochs 300 --batch-size 128 --num-workers 4 --run-name teacher_resnet56_flowers_300ep --output-dir /app/output
+```
+
+The paper-visible parts matched by this script are:
+
+- Dataset: Oxford Flowers 102
+- Teacher: ResNet56 trained from scratch
+- Image resolution: `224 x 224`
+- Framework: PyTorch
+- Metric: Top-1 accuracy
+- Reference teacher Top-1: `66.33%`
+
+The paper does not fully specify the teacher recipe, so this script uses the
+same scaffold choices as the CIFAR-100 teacher run:
+
+- Optimizer: SGD
+- Initial learning rate: `0.1`
+- Momentum: `0.9`
+- Weight decay: `5e-4`
+- Warm-up: 5 epochs
+- LR schedule: cosine decay
+- Batch size: `128`
+- Seed: `42`
+- Train split: official `train + val`
+- Eval split: official `test`
+- Best checkpoint selected by highest eval Top-1
+
+---
+
+## Legacy CIFAR-100 LG-style training
 
 This repository runs the LG-style baseline used for the IBAM/iBKD experiment
 check on H200:
@@ -33,6 +113,8 @@ The full run should now be submitted without `--smoke`.
 - `train_lg_cifar100.py`: full training script
 - `train_teacher_cifar100.py`: teacher-only ResNet56 training and optional
   GitHub artifact upload script
+- `train_teacher_flowers.py`: teacher-only Oxford Flowers ResNet56 training
+  script
 - `eval_lg_deit_cifar100.py`: evaluates an already-trained LG/pycls DeiT-Tiny
   `.pyth` checkpoint on CIFAR-100
 - `requirements.txt`: declared Python dependencies
