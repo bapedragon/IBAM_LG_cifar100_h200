@@ -16,16 +16,77 @@ https://github.com/bapedragon/IBAM_teacher_KD_H200.git
 | Dataset | Teacher | Status | Current Top-1 | Paper teacher Top-1 | Artifact |
 |---|---|---:|---:|---:|---|
 | CIFAR-100 | ResNet56 | Done | 68.68% | 70.43% | `teacher_resnet56_best.pt` collected |
-| Flowers | ResNet56 | Next | - | 66.33% | pending |
-| Chaoyang | ResNet56 | Pending | - | 77.20% | pending |
+| Flowers | ResNet56 | Done | 64.64% | 66.33% | `teacher_resnet56_flowers_best.pt` collected |
+| Chaoyang | ResNet56 | Next | - | 77.20% | mounted dataset ready |
 
 ## Teacher scripts
 
 - `train_teacher_cifar100.py`: CIFAR-100 ResNet56 teacher training.
 - `train_teacher_flowers.py`: Oxford Flowers 102 ResNet56 teacher training.
+- `train_teacher_chaoyang.py`: mounted Chaoyang ResNet56 teacher training.
 
 All H200 teacher runs should save artifacts under `/app/output` because this is
 the output path collected by the H200 runner.
+
+### Chaoyang mounted dataset
+
+The official Chaoyang dataset is mounted read-only at:
+
+```text
+/app/data/chaoyang/
+```
+
+The training script automatically finds the dataset when the ZIP extraction
+created one additional nested folder. It verifies the official files and split
+before training:
+
+```text
+train/       4,021 images
+test/        2,139 images
+train.json
+test.json
+```
+
+Expected label counts are checked exactly for all four classes: normal,
+serrated, adenocarcinoma, and adenoma. Any missing file or split mismatch causes
+an explicit `[FATAL]` log before training starts. The original dataset must not
+be committed to this repository because its license prohibits redistribution.
+
+### Chaoyang 2-epoch timing test
+
+Run this first on one whole H200 GPU. The command intentionally omits
+`--output-dir /app/output`, so timing-test checkpoints remain in the temporary
+Pod workspace and are not collected as final artifacts:
+
+```bash
+python train_teacher_chaoyang.py --data-dir /app/data/chaoyang --teacher-epochs 2 --batch-size 128 --num-workers 4 --run-name teacher_resnet56_chaoyang_timing_2ep
+```
+
+Check the final lines for the measured average epoch time and estimated
+300-epoch duration.
+
+### Chaoyang full teacher run
+
+After the timing test confirms the mount and training flow:
+
+```bash
+python train_teacher_chaoyang.py --data-dir /app/data/chaoyang --teacher-epochs 300 --batch-size 128 --num-workers 4 --run-name teacher_resnet56_chaoyang_300ep --output-dir /app/output
+```
+
+Expected collected artifacts:
+
+```text
+/app/output/teacher_resnet56_chaoyang_300ep/teacher_resnet56_chaoyang_best.pt
+/app/output/teacher_resnet56_chaoyang_300ep/teacher_resnet56_chaoyang_latest.pt
+/app/output/teacher_resnet56_chaoyang_300ep/summary.json
+```
+
+The paper-visible parts matched by this script are Chaoyang, a ResNet56 teacher
+trained from scratch, 224 x 224 input, PyTorch, Top-1 evaluation, and the paper
+teacher reference of `77.20%`. The unspecified teacher recipe is kept identical
+to the CIFAR-100 and Flowers scaffold: SGD, learning rate `0.1`, momentum `0.9`,
+weight decay `5e-4`, five warm-up epochs, cosine decay, batch size `128`, seed
+`42`, and the highest test Top-1 checkpoint as the final teacher.
 
 ### Flowers 2-epoch output/timing test
 
@@ -115,6 +176,8 @@ The full run should now be submitted without `--smoke`.
   GitHub artifact upload script
 - `train_teacher_flowers.py`: teacher-only Oxford Flowers ResNet56 training
   script
+- `train_teacher_chaoyang.py`: teacher-only Chaoyang ResNet56 training script
+  for the mounted official dataset
 - `eval_lg_deit_cifar100.py`: evaluates an already-trained LG/pycls DeiT-Tiny
   `.pyth` checkpoint on CIFAR-100
 - `requirements.txt`: declared Python dependencies
