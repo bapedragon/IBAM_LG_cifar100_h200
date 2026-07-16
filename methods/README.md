@@ -7,8 +7,8 @@ the full training loop three times.
 
 ```text
 methods/
-  KD/                  implemented, 1/3 primary Table-2 runs complete
-  CRD/                 planned
+  KD/                  3/3 primary runs executed; artifacts pending review
+  CRD/                 official-code-based implementation ready for timing
   ReviewKD/            planned
   MGD/                 planned
   OFA/                 planned
@@ -40,7 +40,7 @@ CRD, ReviewKD, MGD, and OFA.
 |---|---:|---:|---|---:|---:|---|---|
 | CIFAR-100 | 300 | 128 | AdamW | `5e-4` | 20 | Cosine | Existing protocol |
 | Flowers-102 | 200 | 64 | AdamW | `5e-4` | 5 | Cosine | Fixed as `flowers102_deit_ti_common_kd_v1` |
-| Chaoyang | TBD | TBD | TBD | TBD | TBD | TBD | Review before launch |
+| Chaoyang | 100 | 64 | AdamW | `5e-4` | 5 | Cosine | Fixed as `chaoyang_deit_ti_common_kd_v1` |
 
 Seed `42`, exact augmentation, method loss weights, temperatures, feature
 adapters, and best-versus-latest reporting are implementation choices that must
@@ -49,18 +49,17 @@ be recorded explicitly in each run summary.
 ## Baselines
 
 1. Logit KD: first implementation target; directly supports CNN teacher to ViT student.
-2. CRD: requires an explicit representation projection rule.
+2. CRD: official method code with ResNet pooled feature and DeiT CLS projection.
 3. ReviewKD: requires a documented CNN-stage to ViT-token mapping.
 4. MGD: requires a documented token-grid reshape and feature adapter.
 5. OFA: heterogeneous architecture baseline.
 
-Before launching all 21 runs, validate one full-data timing run using
-`CIFAR-100 / ResNet56 -> DeiT-Ti / logit KD`.
+Before each new method's first full run, validate one full-data timing run.
 
-Current timing command:
+Current CRD timing command:
 
 ```bash
-python methods/KD/cifar100/train.py --student deit_ti --timing-run --batch-size 128 --num-workers 4
+python methods/CRD/cifar100/train.py --timing-run --num-workers 4
 ```
 
 ## Required output contract

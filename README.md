@@ -40,6 +40,13 @@ methods/
     cifar100/{train.py,README.md}
     flowers102/{train.py,README.md}
     chaoyang/{train.py,README.md}
+  CRD/
+    README.md
+    official_crd.py
+    core.py
+    cifar100/{train.py,README.md}
+    flowers102/{train.py,README.md}
+    chaoyang/{train.py,README.md}
 train_teacher_cifar100.py
 train_teacher_flowers.py
 train_teacher_chaoyang.py
@@ -60,6 +67,10 @@ README.md
   has its own protocol README and uses dataset-specific execution wrappers.
 - `methods/KD/core.py`: shared standard-logit-KD training, evaluation, logging,
   and checkpoint implementation.
+- `methods/CRD/official_crd.py`: CRD loss and memory bank ported from the
+  authors' official RepDistiller repository.
+- `methods/CRD/core.py`: ResNet56-to-DeiT-Ti adapter, official CRD sampling,
+  training, logging, and checkpoint implementation.
 
 Legacy LG student training, LG checkpoint evaluation, the downloaded LG weight,
 and GitHub-token artifact upload experiments have been removed. H200 artifacts
