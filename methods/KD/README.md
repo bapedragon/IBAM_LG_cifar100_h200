@@ -28,7 +28,7 @@ all compared KD methods must reuse that protocol within the dataset.
 |---|---:|---:|---:|---:|---:|---:|
 | CIFAR-100 | 300 | 128 | `5e-4` | `0.05` | 20 | 224 |
 | Flowers-102 | 200 | 64 | `5e-4` | `0.05` | 5 | 224 |
-| Chaoyang | TBD | TBD | TBD | TBD | TBD | 224 |
+| Chaoyang | 100 | 64 | `5e-4` | `0.05` | 5 | 224 |
 
 All current protocols use AdamW, cosine decay, PyTorch CUDA AMP, no external
 pretraining, and Top-1 evaluation. See each dataset README for its augmentation,
