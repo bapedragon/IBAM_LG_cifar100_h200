@@ -119,6 +119,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=tuple(NUM_CLASSES), default="cifar100")
     parser.add_argument("--student", choices=tuple(STUDENT_MODELS), default="deit_ti")
+    parser.add_argument(
+        "--protocol-name",
+        type=str,
+        default="manual",
+        help="Recorded name of the dataset-specific training protocol.",
+    )
     parser.add_argument("--data-dir", type=Path, default=None)
     parser.add_argument("--teacher-root", type=Path, default=DEFAULT_CHECKPOINT_ROOT)
     parser.add_argument("--output-dir", type=Path, default=Path("./outputs"))
@@ -127,7 +133,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--timing-run",
         action="store_true",
-        help="Use the full dataset for two epochs and report estimated 300-epoch time.",
+        help="Use the full dataset for two epochs and estimate the planned full run.",
     )
     parser.add_argument("--student-epochs", type=int, default=300)
     parser.add_argument("--batch-size", type=int, default=128)
@@ -157,6 +163,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def finalize_args(args: argparse.Namespace) -> None:
+    args.planned_epochs = args.student_epochs
     if args.timing_run:
         args.student_epochs = 2
     if args.data_dir is None:
@@ -164,7 +171,11 @@ def finalize_args(args: argparse.Namespace) -> None:
             Path("/app/data/chaoyang") if args.dataset == "chaoyang" else Path("./data")
         )
     if args.run_name is None:
-        suffix = "timing_2ep" if args.timing_run else ("smoke" if args.smoke else "300ep")
+        suffix = (
+            "timing_2ep"
+            if args.timing_run
+            else ("smoke" if args.smoke else f"{args.student_epochs}ep")
+        )
         args.run_name = f"kd_{args.dataset}_{args.student}_{suffix}"
 
     positive_fields = (
@@ -406,6 +417,7 @@ def write_summary(
 ) -> None:
     average_epoch = sum(epoch_times) / max(1, len(epoch_times))
     estimated_300 = average_epoch * 300
+    estimated_planned = average_epoch * args.planned_epochs
     summary = {
         "status": "complete" if latest_epoch == args.student_epochs else "running",
         "method": "KD",
@@ -421,6 +433,9 @@ def write_summary(
         "gain_over_vanilla_pp": best_accuracy - VANILLA_TOP1[args.dataset][args.student],
         "epoch_times": epoch_times,
         "avg_epoch_seconds": average_epoch,
+        "planned_epochs": args.planned_epochs,
+        "estimated_planned_seconds": estimated_planned,
+        "estimated_planned_human": format_duration(estimated_planned),
         "estimated_300_seconds": estimated_300,
         "estimated_300_human": format_duration(estimated_300),
         "elapsed_seconds": elapsed_seconds,
@@ -468,10 +483,11 @@ def main() -> None:
     log(f"[PATH] run_dir={run_dir.resolve()}")
     log(
         f"[MODE] smoke={args.smoke} timing_run={args.timing_run} "
-        f"student_epochs={args.student_epochs}"
+        f"student_epochs={args.student_epochs} planned_epochs={args.planned_epochs}"
     )
     log(
-        f"[PROTOCOL] optimizer=AdamW lr={args.lr} weight_decay={args.weight_decay} "
+        f"[PROTOCOL] name={args.protocol_name} optimizer=AdamW "
+        f"lr={args.lr} weight_decay={args.weight_decay} "
         f"warmup={args.warmup_epochs} cosine batch={args.batch_size} "
         f"image={args.image_size}"
     )
@@ -573,7 +589,8 @@ def main() -> None:
             f"ce={ce:.4f} kd={distillation:.4f} train_acc={train_accuracy:.2f}% "
             f"val_acc={latest_accuracy:.2f}% best={best_accuracy:.2f}% "
             f"lr={epoch_lr:.6g} time={epoch_seconds:.1f}s "
-            f"avg_epoch={average_epoch:.1f}s est_300={format_duration(average_epoch * 300)} "
+            f"avg_epoch={average_epoch:.1f}s "
+            f"est_planned={format_duration(average_epoch * args.planned_epochs)} "
             f"elapsed={format_duration(elapsed)}{suffix}"
         )
         scheduler.step()
@@ -588,7 +605,8 @@ def main() -> None:
     )
     log(
         f"[TIMING] avg_epoch={average_epoch:.1f}s "
-        f"estimated_300_student={format_duration(average_epoch * 300)} "
+        f"planned_epochs={args.planned_epochs} "
+        f"estimated_total={format_duration(average_epoch * args.planned_epochs)} "
         f"elapsed={format_duration(elapsed)}"
     )
     log(f"[FINAL_RESULT] best_checkpoint={best_checkpoint.resolve()}")

@@ -86,7 +86,8 @@ The method and dataset protocols are kept under `methods/`. See
 [methods/KD/cifar100/README.md](methods/KD/cifar100/README.md) for the first
 experiment.
 
-Current completed student results:
+Current completed results. Table 2 now uses DeiT-Ti only; the other students
+below are retained as exploratory runs.
 
 | Method | Dataset | Student | Best Top-1 | Vanilla | Gain |
 |---|---|---|---:|---:|---:|

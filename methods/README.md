@@ -7,7 +7,7 @@ the full training loop three times.
 
 ```text
 methods/
-  KD/                  implemented, 3/21 runs complete
+  KD/                  implemented, 1/3 primary Table-2 runs complete
   CRD/                 planned
   ReviewKD/            planned
   MGD/                 planned
@@ -20,26 +20,27 @@ Teacher selection is complete. Every KD method must use the files recorded in
 `checkpoints/teachers/manifest.json`; a method-specific teacher replacement is
 not allowed.
 
-The target matrix contains three datasets and seven ViT students:
+The primary Table-2 matrix now contains three datasets and one ViT student:
 
 - Datasets: CIFAR-100, Flowers-102, Chaoyang
-- Students: DeiT-Ti, ConViT, CvT, PiT, PVTv2, T2T-7, T2T-14
-- Runs per KD method: `3 datasets x 7 students = 21 runs`
+- Student: DeiT-Ti
+- Runs per KD method: `3 datasets x 1 student = 3 runs`
 
-## Common student protocol
+Completed ConViT-Tiny and PiT-Tiny runs are retained as exploratory results,
+but they are not required for the primary Table-2 matrix.
 
-The following settings come from the V2 paper draft and must remain common
-across the compared methods:
+## Dataset-specific student protocols
 
-- 300 epochs
-- AdamW
-- Initial learning rate `5e-4`
-- Weight decay `0.05`
-- 20-epoch warm-up followed by cosine decay
-- Batch size `128`
-- Image resolution `224 x 224`
-- PyTorch and AMP on CUDA
-- Top-1 accuracy evaluation
+The previous draft incorrectly claimed one identical 300-epoch protocol across
+all datasets. The revised experiment policy uses a documented base protocol per
+dataset. Within one dataset, that protocol must remain identical across KD,
+CRD, ReviewKD, MGD, and OFA.
+
+| Dataset | Epochs | Batch | Optimizer | LR | Warm-up | Schedule | Status |
+|---|---:|---:|---|---:|---:|---|---|
+| CIFAR-100 | 300 | 128 | AdamW | `5e-4` | 20 | Cosine | Existing protocol |
+| Flowers-102 | 200 | 64 | AdamW | `5e-4` | 5 | Cosine | Fixed as `flowers102_deit_ti_common_kd_v1` |
+| Chaoyang | TBD | TBD | TBD | TBD | TBD | TBD | Review before launch |
 
 Seed `42`, exact augmentation, method loss weights, temperatures, feature
 adapters, and best-versus-latest reporting are implementation choices that must
