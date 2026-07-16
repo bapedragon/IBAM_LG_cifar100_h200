@@ -33,3 +33,5 @@ python methods/KD/cifar100/train.py --student deit_ti --student-epochs 300 --bat
 | Student | Best Top-1 | Best epoch | Vanilla | Gain | Result record |
 |---|---:|---:|---:|---:|---|
 | DeiT-Ti | **67.00%** | 191 | 65.08% | +1.92pp | `results/deit_ti/` |
+| ConViT-Tiny | **73.59%** | 266 | 74.87% | -1.28pp | `results/convit/` |
+| PiT-Tiny | **72.22%** | 185 | 73.16% | -0.94pp | `results/pit/` |

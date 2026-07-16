@@ -7,7 +7,7 @@ the full training loop three times.
 
 ```text
 methods/
-  KD/                  implemented, 1/21 runs complete
+  KD/                  implemented, 3/21 runs complete
   CRD/                 planned
   ReviewKD/            planned
   MGD/                 planned

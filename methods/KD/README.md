@@ -72,5 +72,7 @@ been checked.
 | Dataset | Student | Best Top-1 | Vanilla | Gain | Status |
 |---|---|---:|---:|---:|---|
 | CIFAR-100 | DeiT-Ti | **67.00%** | 65.08% | +1.92pp | Complete |
+| CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp | Complete |
+| CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp | Complete |
 
-Detailed result: `cifar100/results/deit_ti/README.md`.
+Detailed records are stored under `cifar100/results/<student>/`.

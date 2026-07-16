@@ -86,11 +86,13 @@ The method and dataset protocols are kept under `methods/`. See
 [methods/KD/cifar100/README.md](methods/KD/cifar100/README.md) for the first
 experiment.
 
-Current completed student result:
+Current completed student results:
 
 | Method | Dataset | Student | Best Top-1 | Vanilla | Gain |
 |---|---|---|---:|---:|---:|
 | KD | CIFAR-100 | DeiT-Ti | **67.00%** | 65.08% | +1.92pp |
+| KD | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp |
+| KD | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp |
 
 First full-data timing run:
 

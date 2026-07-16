@@ -1,0 +1,22 @@
+{
+  "source_job": "bapedragon_397",
+  "archive": {
+    "filename": "KD_CIFAR100_PiT-Tiny_300ep_seed42_Top1-72.22.zip",
+    "sha256": "553b3545eb8f1adc098a46638f28ddc770e787e15d8c6325913904020a9e3d50",
+    "tracked_in_git": false
+  },
+  "selected_checkpoint": {
+    "filename_in_archive": "bapedragon_397/kd_cifar100_pit_300ep/student_best.pt",
+    "epoch": 185,
+    "top1": 72.22,
+    "sha256": "1083e555f0778084b77cf66a46ff059d4fccce41d6bb64c5b710ac8af3c49f0c",
+    "strict_load_verified": true
+  },
+  "latest_checkpoint": {
+    "filename_in_archive": "bapedragon_397/kd_cifar100_pit_300ep/student_latest.pt",
+    "epoch": 300,
+    "top1": 71.54,
+    "sha256": "6b2691b9333acdfebe949ae28a4657ee6873ced70ac2e2ef80419c54ed363462",
+    "strict_load_verified": true
+  }
+}
