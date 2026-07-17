@@ -1,0 +1,24 @@
+{
+  "source_job": "bapedragon_411",
+  "archive": {
+    "filename": "ReviewKD_CIFAR100_DeiT-Ti_300ep_seed42_Top1-72.84.zip",
+    "sha256": "bb9699516c2a3b438ba32f8ae45d2bee683b81d32307a93b76ceb8ac3e6404da",
+    "tracked_in_git": false
+  },
+  "selected_checkpoint": {
+    "filename_in_archive": "bapedragon_411/reviewkd_cifar100_deit_ti_300ep/student_best.pt",
+    "epoch": 236,
+    "top1": 72.84,
+    "sha256": "c26d2c61a67c4fe0558fb8aa565b6927ae292016d6fe0fbe25260a69804d80ee",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  },
+  "latest_checkpoint": {
+    "filename_in_archive": "bapedragon_411/reviewkd_cifar100_deit_ti_300ep/student_latest.pt",
+    "epoch": 300,
+    "top1": 72.48,
+    "sha256": "3d708c58167da1a52ba15fe9282409cbda72316da2fa15534cbb27f8fdb2198b",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  }
+}

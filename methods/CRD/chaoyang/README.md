@@ -20,3 +20,8 @@ python methods/CRD/chaoyang/train.py --num-workers 4 --run-name crd_chaoyang_dei
 
 Any teacher-gap adjustment is reporting-only and is applied after training to
 the raw best Top-1 result.
+
+## Completed result
+
+Raw best Top-1 is **76.48%** at epoch 75; epoch-100 latest Top-1 is 75.41%.
+The complete unadjusted record is stored under `results/deit_ti/`.

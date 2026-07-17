@@ -72,7 +72,10 @@ ConViT-Tiny and PiT-Tiny results are retained as exploratory runs.
 | Dataset | Student | Best Top-1 | Vanilla | Gain | Status |
 |---|---|---:|---:|---:|---|
 | CIFAR-100 | DeiT-Ti | **67.00%** | 65.08% | +1.92pp | Complete |
+| Flowers-102 | DeiT-Ti | **45.88%** | 50.06% | -4.18pp | Complete |
+| Chaoyang | DeiT-Ti | **80.60%** | 82.00% | -1.40pp | Complete |
 | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp | Exploratory |
 | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp | Exploratory |
 
-Detailed records are stored under `cifar100/results/<student>/`.
+Detailed records are stored under `<dataset>/results/deit_ti/`; exploratory
+CIFAR-100 students remain under `cifar100/results/<student>/`.

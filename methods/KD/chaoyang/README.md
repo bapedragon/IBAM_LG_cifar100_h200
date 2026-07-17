@@ -115,3 +115,11 @@ python methods/KD/chaoyang/train.py --student deit_ti --num-workers 4 --run-name
 The wrapper injects the selected Chaoyang defaults. Explicit CLI arguments can
 override them, but any override creates a different protocol and must use a new
 protocol name.
+
+## Completed result
+
+| Student | Raw best Top-1 | Best epoch | Latest Top-1 | Vanilla | Gain |
+|---|---:|---:|---:|---:|---:|
+| DeiT-Ti | **80.60%** | 94 | 80.22% | 82.00% | -1.40pp |
+
+The complete unadjusted record is stored under `results/deit_ti/`.

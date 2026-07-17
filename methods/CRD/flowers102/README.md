@@ -16,3 +16,8 @@ Full run:
 ```bash
 python methods/CRD/flowers102/train.py --num-workers 4 --run-name crd_flowers102_deit_ti_200ep --output-dir /app/output
 ```
+
+## Completed result
+
+Best Top-1 is **46.63%** at epoch 101; epoch-200 latest Top-1 is 46.06%.
+The complete record is stored under `results/deit_ti/`.

@@ -1,0 +1,353 @@
+[BOOT] timm not found; installing timm==1.0.27
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[BOOT] timm installation completed
+========================================================================
+OFFICIAL-CODE-BASED REVIEWKD / RESNET56 -> DEIT-TI
+========================================================================
+[ENV] python=3.10.12 torch=2.11.0+cu130 timm=1.0.27
+[ENV] cuda_available=True cuda_device_count=1
+[ENV] gpu_name=NVIDIA H200 NVL
+[ENV] gpu_memory_gib=139.80
+[ENV] device=cuda amp=True seed=42
+[PATH] data_dir=/app/scratch/input/bapedragon_411/data
+[PATH] teacher_root=/app/scratch/input/bapedragon_411/checkpoints/teachers
+[PATH] run_dir=/app/output/reviewkd_cifar100_deit_ti_300ep
+[MODE] smoke=False timing_run=False student_epochs=300 planned_epochs=300
+[PROTOCOL] name=cifar100_deit_ti_common_kd_v1 optimizer=AdamW lr=0.0005 weight_decay=0.05 warmup=20 cosine batch=128 image=224
+[REVIEWKD] loss=CE+ramp*0.6*HCL feature_warmup=20 no_logit_KL
+[OFFICIAL] repository=https://github.com/dvlab-research/ReviewKD commit=cede6ea6387ae9b6127de0e561507177bf19c11e
+[ADAPTER] teacher=post-activation stage1/2/3 pooled_to_14x14 student_blocks=(3, 7, 11) token_grid=14x14 channels=(192, 192, 192)->(16, 32, 64) abf_mid=192
+[DATA] CIFAR-100 root=/app/scratch/input/bapedragon_411/data
+[DATA] Preparing CIFAR-100 with verified mirror fallback
+[DATA] Attempt source=Hugging Face mirror try=1/2
+[DATA] Download source=Hugging Face mirror url=https://huggingface.co/datasets/nakroy/cifar100-python/resolve/201a32345d2c6b970e1a36c582930c83e09c96d2/cifar-100-python.tar.gz
+[DATA] Download progress source=Hugging Face mirror 10% (17.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 20% (33.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 30% (49.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 40% (65.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 50% (81.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 60% (97.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 70% (113.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 80% (129.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 90% (146.0 MiB)
+[DATA] Download progress source=Hugging Face mirror 100% (161.2 MiB)
+[DATA] Download verified source=Hugging Face mirror size=161.2 MiB md5=eb9058c3a382ffc7106e4002c42a8d85
+[DATA] Extracting verified archive from Hugging Face mirror
+[DATA] CIFAR-100 ready from Hugging Face mirror
+[DATA] Preparing train split from verified local files
+[DATA] Train split ready: samples=50000
+[DATA] Preparing test split from verified local files
+[DATA] Test split ready: samples=10000
+[DATA] train_samples=50000 test_samples=10000
+[DATA] image_size=224 batch_size=128 num_workers=4 smoke=False
+[TEACHER] selected=best epoch=297 top1=68.68% sha256=13f95dae77b6beda1ab810985b504bc43d4e9b0ec8d54abb3aa018f4c942255a
+[MODEL] teacher_params=861,620 student_params=5,543,716 review_trainable_params=307,044
+[FEATURE_CHECK] teacher=[(2, 16, 14, 14), (2, 32, 14, 14), (2, 64, 14, 14)] student=[(2, 192, 14, 14), (2, 192, 14, 14), (2, 192, 14, 14)] reviewed=[(2, 16, 14, 14), (2, 32, 14, 14), (2, 64, 14, 14)]
+[STUDENT] optimizer=adamw lr=0.0005 weight_decay=0.05 epochs=300 effective_warmup=20
+[REVIEWKD][001/300] loss=4.3005 ce=4.3005 hcl=14.2749 ramp=0.000 train_acc=7.06% val_acc=10.82% best=10.82% lr=2.5e-05 time=34.0s avg_epoch=34.0s est_planned=2h 50m 09s elapsed=34s saved_best
+[REVIEWKD][002/300] loss=4.3441 ce=3.9739 hcl=12.3393 ramp=0.050 train_acc=13.49% val_acc=16.82% best=16.82% lr=5e-05 time=32.0s avg_epoch=33.0s est_planned=2h 45m 11s elapsed=1m 06s saved_best
+[REVIEWKD][003/300] loss=4.3943 ce=3.7000 hcl=11.5731 ramp=0.100 train_acc=18.21% val_acc=20.85% best=20.85% lr=7.5e-05 time=31.9s avg_epoch=32.6s est_planned=2h 43m 13s elapsed=1m 38s saved_best
+[REVIEWKD][004/300] loss=4.4470 ce=3.4513 hcl=11.0631 ramp=0.150 train_acc=23.02% val_acc=26.05% best=26.05% lr=0.0001 time=32.1s avg_epoch=32.5s est_planned=2h 42m 35s elapsed=2m 10s saved_best
+[REVIEWKD][005/300] loss=4.4899 ce=3.2268 hcl=10.5256 ramp=0.200 train_acc=27.55% val_acc=28.73% best=28.73% lr=0.000125 time=32.0s avg_epoch=32.4s est_planned=2h 42m 04s elapsed=2m 43s saved_best
+[REVIEWKD][006/300] loss=4.5622 ce=3.0603 hcl=10.0123 ramp=0.250 train_acc=31.23% val_acc=33.79% best=33.79% lr=0.00015 time=31.8s avg_epoch=32.3s est_planned=2h 41m 34s elapsed=3m 14s saved_best
+[REVIEWKD][007/300] loss=4.6218 ce=2.9124 hcl=9.4967 ramp=0.300 train_acc=34.69% val_acc=35.00% best=35.00% lr=0.000175 time=32.0s avg_epoch=32.3s est_planned=2h 41m 21s elapsed=3m 47s saved_best
+[REVIEWKD][008/300] loss=4.6875 ce=2.7981 hcl=8.9975 ramp=0.350 train_acc=37.34% val_acc=37.42% best=37.42% lr=0.0002 time=31.9s avg_epoch=32.2s est_planned=2h 41m 09s elapsed=4m 19s saved_best
+[REVIEWKD][009/300] loss=4.7423 ce=2.6947 hcl=8.5316 ramp=0.400 train_acc=40.04% val_acc=39.59% best=39.59% lr=0.000225 time=32.0s avg_epoch=32.2s est_planned=2h 41m 00s elapsed=4m 51s saved_best
+[REVIEWKD][010/300] loss=4.7813 ce=2.5943 hcl=8.0999 ramp=0.450 train_acc=42.90% val_acc=40.98% best=40.98% lr=0.00025 time=32.2s avg_epoch=32.2s est_planned=2h 41m 01s elapsed=5m 23s saved_best
+[REVIEWKD][011/300] loss=4.8113 ce=2.4993 hcl=7.7066 ramp=0.500 train_acc=45.51% val_acc=45.42% best=45.42% lr=0.000275 time=32.1s avg_epoch=32.2s est_planned=2h 41m 00s elapsed=5m 55s saved_best
+[REVIEWKD][012/300] loss=4.8272 ce=2.4027 hcl=7.3471 ramp=0.550 train_acc=48.22% val_acc=44.97% best=45.42% lr=0.0003 time=32.6s avg_epoch=32.2s est_planned=2h 41m 09s elapsed=6m 28s
+[REVIEWKD][013/300] loss=4.8363 ce=2.3048 hcl=7.0317 ramp=0.600 train_acc=50.99% val_acc=49.50% best=49.50% lr=0.000325 time=32.7s avg_epoch=32.3s est_planned=2h 41m 21s elapsed=7m 01s saved_best
+[REVIEWKD][014/300] loss=4.8523 ce=2.2181 hcl=6.7542 ramp=0.650 train_acc=53.39% val_acc=49.80% best=49.80% lr=0.00035 time=32.6s avg_epoch=32.3s est_planned=2h 41m 27s elapsed=7m 33s saved_best
+[REVIEWKD][015/300] loss=4.8709 ce=2.1367 hcl=6.5100 ramp=0.700 train_acc=55.80% val_acc=52.13% best=52.13% lr=0.000375 time=32.4s avg_epoch=32.3s est_planned=2h 41m 29s elapsed=8m 06s saved_best
+[REVIEWKD][016/300] loss=4.8748 ce=2.0450 hcl=6.2883 ramp=0.750 train_acc=58.82% val_acc=53.50% best=53.50% lr=0.0004 time=31.9s avg_epoch=32.3s est_planned=2h 41m 23s elapsed=8m 38s saved_best
+[REVIEWKD][017/300] loss=4.8883 ce=1.9600 hcl=6.1007 ramp=0.800 train_acc=61.22% val_acc=54.59% best=54.59% lr=0.000425 time=32.0s avg_epoch=32.3s est_planned=2h 41m 18s elapsed=9m 10s saved_best
+[REVIEWKD][018/300] loss=4.9162 ce=1.8848 hcl=5.9438 ramp=0.850 train_acc=63.58% val_acc=55.85% best=55.85% lr=0.00045 time=31.8s avg_epoch=32.2s est_planned=2h 41m 10s elapsed=9m 42s saved_best
+[REVIEWKD][019/300] loss=4.9395 ce=1.8013 hcl=5.8115 ramp=0.900 train_acc=66.47% val_acc=55.74% best=55.85% lr=0.000475 time=32.1s avg_epoch=32.2s est_planned=2h 41m 09s elapsed=10m 14s
+[REVIEWKD][020/300] loss=4.9619 ce=1.7182 hcl=5.6906 ramp=0.950 train_acc=68.90% val_acc=57.05% best=57.05% lr=0.0005 time=32.2s avg_epoch=32.2s est_planned=2h 41m 09s elapsed=10m 46s saved_best
+[REVIEWKD][021/300] loss=4.9575 ce=1.6161 hcl=5.5690 ramp=1.000 train_acc=72.32% val_acc=59.97% best=59.97% lr=0.0005 time=32.0s avg_epoch=32.2s est_planned=2h 41m 05s elapsed=11m 19s saved_best
+[REVIEWKD][022/300] loss=4.8096 ce=1.5291 hcl=5.4675 ramp=1.000 train_acc=75.21% val_acc=59.52% best=59.97% lr=0.000499984 time=32.1s avg_epoch=32.2s est_planned=2h 41m 03s elapsed=11m 51s
+[REVIEWKD][023/300] loss=4.6731 ce=1.4445 hcl=5.3810 ramp=1.000 train_acc=78.52% val_acc=59.82% best=59.97% lr=0.000499937 time=32.1s avg_epoch=32.2s est_planned=2h 41m 02s elapsed=12m 23s
+[REVIEWKD][024/300] loss=4.5300 ce=1.3563 hcl=5.2896 ramp=1.000 train_acc=81.46% val_acc=59.88% best=59.97% lr=0.000499858 time=32.4s avg_epoch=32.2s est_planned=2h 41m 04s elapsed=12m 55s
+[REVIEWKD][025/300] loss=4.4188 ce=1.2874 hcl=5.2190 ramp=1.000 train_acc=84.02% val_acc=60.85% best=60.85% lr=0.000499748 time=32.2s avg_epoch=32.2s est_planned=2h 41m 04s elapsed=13m 28s saved_best
+[REVIEWKD][026/300] loss=4.3189 ce=1.2287 hcl=5.1503 ramp=1.000 train_acc=86.24% val_acc=60.67% best=60.85% lr=0.000499607 time=32.3s avg_epoch=32.2s est_planned=2h 41m 05s elapsed=14m 00s
+[REVIEWKD][027/300] loss=4.2270 ce=1.1753 hcl=5.0861 ramp=1.000 train_acc=88.27% val_acc=61.63% best=61.63% lr=0.000499434 time=32.3s avg_epoch=32.2s est_planned=2h 41m 06s elapsed=14m 32s saved_best
+[REVIEWKD][028/300] loss=4.1404 ce=1.1267 hcl=5.0228 ramp=1.000 train_acc=90.00% val_acc=62.53% best=62.53% lr=0.000499229 time=32.2s avg_epoch=32.2s est_planned=2h 41m 05s elapsed=15m 05s saved_best
+[REVIEWKD][029/300] loss=4.0658 ce=1.0900 hcl=4.9595 ramp=1.000 train_acc=91.27% val_acc=62.96% best=62.96% lr=0.000498994 time=31.8s avg_epoch=32.2s est_planned=2h 41m 01s elapsed=15m 37s saved_best
+[REVIEWKD][030/300] loss=4.0287 ce=1.0782 hcl=4.9174 ramp=1.000 train_acc=91.61% val_acc=62.54% best=62.96% lr=0.000498726 time=32.2s avg_epoch=32.2s est_planned=2h 41m 01s elapsed=16m 09s
+[REVIEWKD][031/300] loss=3.9604 ce=1.0453 hcl=4.8584 ramp=1.000 train_acc=92.79% val_acc=62.00% best=62.96% lr=0.000498428 time=32.3s avg_epoch=32.2s est_planned=2h 41m 02s elapsed=16m 41s
+[REVIEWKD][032/300] loss=3.9069 ce=1.0279 hcl=4.7983 ramp=1.000 train_acc=93.36% val_acc=62.94% best=62.96% lr=0.000498098 time=31.9s avg_epoch=32.2s est_planned=2h 40m 59s elapsed=17m 13s
+[REVIEWKD][033/300] loss=3.8552 ce=1.0075 hcl=4.7461 ramp=1.000 train_acc=94.00% val_acc=63.95% best=63.95% lr=0.000497737 time=32.0s avg_epoch=32.2s est_planned=2h 40m 57s elapsed=17m 45s saved_best
+[REVIEWKD][034/300] loss=3.8120 ce=0.9939 hcl=4.6968 ramp=1.000 train_acc=94.35% val_acc=64.31% best=64.31% lr=0.000497345 time=32.1s avg_epoch=32.2s est_planned=2h 40m 56s elapsed=18m 17s saved_best
+[REVIEWKD][035/300] loss=3.7639 ce=0.9797 hcl=4.6404 ramp=1.000 train_acc=94.77% val_acc=63.96% best=64.31% lr=0.000496922 time=32.4s avg_epoch=32.2s est_planned=2h 40m 58s elapsed=18m 50s
+[REVIEWKD][036/300] loss=3.7368 ce=0.9732 hcl=4.6061 ramp=1.000 train_acc=95.02% val_acc=63.76% best=64.31% lr=0.000496468 time=32.0s avg_epoch=32.2s est_planned=2h 40m 57s elapsed=19m 22s
+[REVIEWKD][037/300] loss=3.6988 ce=0.9662 hcl=4.5544 ramp=1.000 train_acc=95.15% val_acc=64.49% best=64.49% lr=0.000495982 time=32.0s avg_epoch=32.2s est_planned=2h 40m 55s elapsed=19m 54s saved_best
+[REVIEWKD][038/300] loss=3.6599 ce=0.9558 hcl=4.5069 ramp=1.000 train_acc=95.43% val_acc=63.51% best=64.49% lr=0.000495466 time=31.9s avg_epoch=32.2s est_planned=2h 40m 53s elapsed=20m 26s
+[REVIEWKD][039/300] loss=3.6195 ce=0.9423 hcl=4.4620 ramp=1.000 train_acc=95.78% val_acc=63.75% best=64.49% lr=0.000494919 time=32.1s avg_epoch=32.2s est_planned=2h 40m 52s elapsed=20m 58s
+[REVIEWKD][040/300] loss=3.5938 ce=0.9397 hcl=4.4236 ramp=1.000 train_acc=95.81% val_acc=63.89% best=64.49% lr=0.000494341 time=32.2s avg_epoch=32.2s est_planned=2h 40m 53s elapsed=21m 30s
+[REVIEWKD][041/300] loss=3.5659 ce=0.9351 hcl=4.3848 ramp=1.000 train_acc=95.90% val_acc=64.89% best=64.89% lr=0.000493732 time=32.1s avg_epoch=32.2s est_planned=2h 40m 52s elapsed=22m 03s saved_best
+[REVIEWKD][042/300] loss=3.5227 ce=0.9220 hcl=4.3345 ramp=1.000 train_acc=96.35% val_acc=64.81% best=64.89% lr=0.000493092 time=32.2s avg_epoch=32.2s est_planned=2h 40m 52s elapsed=22m 35s
+[REVIEWKD][043/300] loss=3.4980 ce=0.9172 hcl=4.3012 ramp=1.000 train_acc=96.45% val_acc=65.19% best=65.19% lr=0.000492422 time=32.0s avg_epoch=32.2s est_planned=2h 40m 51s elapsed=23m 07s saved_best
+[REVIEWKD][044/300] loss=3.4622 ce=0.9098 hcl=4.2541 ramp=1.000 train_acc=96.63% val_acc=64.82% best=65.19% lr=0.000491722 time=32.2s avg_epoch=32.2s est_planned=2h 40m 52s elapsed=23m 39s
+[REVIEWKD][045/300] loss=3.4594 ce=0.9171 hcl=4.2371 ramp=1.000 train_acc=96.20% val_acc=65.80% best=65.80% lr=0.000490991 time=32.5s avg_epoch=32.2s est_planned=2h 40m 54s elapsed=24m 12s saved_best
+[REVIEWKD][046/300] loss=3.4242 ce=0.9077 hcl=4.1942 ramp=1.000 train_acc=96.61% val_acc=65.20% best=65.80% lr=0.000490229 time=32.2s avg_epoch=32.2s est_planned=2h 40m 54s elapsed=24m 44s
+[REVIEWKD][047/300] loss=3.3838 ce=0.8936 hcl=4.1504 ramp=1.000 train_acc=97.04% val_acc=64.61% best=65.80% lr=0.000489438 time=33.1s avg_epoch=32.2s est_planned=2h 41m 00s elapsed=25m 17s
+[REVIEWKD][048/300] loss=3.3804 ce=0.9025 hcl=4.1297 ramp=1.000 train_acc=96.57% val_acc=64.98% best=65.80% lr=0.000488616 time=32.7s avg_epoch=32.2s est_planned=2h 41m 03s elapsed=25m 50s
+[REVIEWKD][049/300] loss=3.3662 ce=0.8994 hcl=4.1113 ramp=1.000 train_acc=96.74% val_acc=65.15% best=65.80% lr=0.000487764 time=32.9s avg_epoch=32.2s est_planned=2h 41m 07s elapsed=26m 23s
+[REVIEWKD][050/300] loss=3.3157 ce=0.8825 hcl=4.0553 ramp=1.000 train_acc=97.20% val_acc=66.75% best=66.75% lr=0.000486882 time=33.2s avg_epoch=32.2s est_planned=2h 41m 13s elapsed=26m 56s saved_best
+[REVIEWKD][051/300] loss=3.2962 ce=0.8822 hcl=4.0233 ramp=1.000 train_acc=97.21% val_acc=65.47% best=66.75% lr=0.000485971 time=33.1s avg_epoch=32.3s est_planned=2h 41m 18s elapsed=27m 29s
+[REVIEWKD][052/300] loss=3.2925 ce=0.8888 hcl=4.0061 ramp=1.000 train_acc=97.01% val_acc=66.02% best=66.75% lr=0.00048503 time=32.9s avg_epoch=32.3s est_planned=2h 41m 21s elapsed=28m 02s
+[REVIEWKD][053/300] loss=3.2802 ce=0.8941 hcl=3.9768 ramp=1.000 train_acc=96.78% val_acc=65.62% best=66.75% lr=0.000484059 time=33.1s avg_epoch=32.3s est_planned=2h 41m 26s elapsed=28m 36s
+[REVIEWKD][054/300] loss=3.2282 ce=0.8776 hcl=3.9178 ramp=1.000 train_acc=97.38% val_acc=66.49% best=66.75% lr=0.000483058 time=32.8s avg_epoch=32.3s est_planned=2h 41m 29s elapsed=29m 08s
+[REVIEWKD][055/300] loss=3.2176 ce=0.8843 hcl=3.8887 ramp=1.000 train_acc=97.03% val_acc=67.50% best=67.50% lr=0.000482029 time=32.7s avg_epoch=32.3s est_planned=2h 41m 31s elapsed=29m 41s saved_best
+[REVIEWKD][056/300] loss=3.1957 ce=0.8842 hcl=3.8526 ramp=1.000 train_acc=96.97% val_acc=66.65% best=67.50% lr=0.00048097 time=32.4s avg_epoch=32.3s est_planned=2h 41m 32s elapsed=30m 14s
+[REVIEWKD][057/300] loss=3.1533 ce=0.8733 hcl=3.7999 ramp=1.000 train_acc=97.26% val_acc=67.28% best=67.50% lr=0.000479882 time=32.4s avg_epoch=32.3s est_planned=2h 41m 32s elapsed=30m 46s
+[REVIEWKD][058/300] loss=3.1294 ce=0.8717 hcl=3.7628 ramp=1.000 train_acc=97.42% val_acc=67.27% best=67.50% lr=0.000478765 time=32.3s avg_epoch=32.3s est_planned=2h 41m 32s elapsed=31m 18s
+[REVIEWKD][059/300] loss=3.1069 ce=0.8702 hcl=3.7278 ramp=1.000 train_acc=97.45% val_acc=66.34% best=67.50% lr=0.000477619 time=32.2s avg_epoch=32.3s est_planned=2h 41m 32s elapsed=31m 51s
+[REVIEWKD][060/300] loss=3.0760 ce=0.8631 hcl=3.6882 ramp=1.000 train_acc=97.67% val_acc=68.08% best=68.08% lr=0.000476445 time=32.7s avg_epoch=32.3s est_planned=2h 41m 34s elapsed=32m 24s saved_best
+[REVIEWKD][061/300] loss=3.0643 ce=0.8643 hcl=3.6666 ramp=1.000 train_acc=97.54% val_acc=67.69% best=68.08% lr=0.000475242 time=32.7s avg_epoch=32.3s est_planned=2h 41m 36s elapsed=32m 56s
+[REVIEWKD][062/300] loss=3.0667 ce=0.8733 hcl=3.6558 ramp=1.000 train_acc=97.16% val_acc=66.66% best=68.08% lr=0.000474011 time=32.5s avg_epoch=32.3s est_planned=2h 41m 37s elapsed=33m 29s
+[REVIEWKD][063/300] loss=3.0158 ce=0.8570 hcl=3.5980 ramp=1.000 train_acc=97.82% val_acc=68.76% best=68.76% lr=0.000472752 time=32.4s avg_epoch=32.3s est_planned=2h 41m 37s elapsed=34m 01s saved_best
+[REVIEWKD][064/300] loss=3.0148 ce=0.8613 hcl=3.5893 ramp=1.000 train_acc=97.67% val_acc=67.92% best=68.76% lr=0.000471464 time=32.3s avg_epoch=32.3s est_planned=2h 41m 37s elapsed=34m 34s
+[REVIEWKD][065/300] loss=2.9993 ce=0.8627 hcl=3.5611 ramp=1.000 train_acc=97.58% val_acc=67.68% best=68.76% lr=0.000470149 time=32.5s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=35m 06s
+[REVIEWKD][066/300] loss=2.9596 ce=0.8512 hcl=3.5139 ramp=1.000 train_acc=98.00% val_acc=67.72% best=68.76% lr=0.000468806 time=32.2s avg_epoch=32.3s est_planned=2h 41m 37s elapsed=35m 39s
+[REVIEWKD][067/300] loss=2.9701 ce=0.8600 hcl=3.5168 ramp=1.000 train_acc=97.63% val_acc=67.32% best=68.76% lr=0.000467435 time=32.3s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=36m 11s
+[REVIEWKD][068/300] loss=2.9456 ce=0.8539 hcl=3.4861 ramp=1.000 train_acc=97.85% val_acc=66.74% best=68.76% lr=0.000466037 time=32.5s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=36m 44s
+[REVIEWKD][069/300] loss=2.9362 ce=0.8546 hcl=3.4694 ramp=1.000 train_acc=97.85% val_acc=68.71% best=68.76% lr=0.000464612 time=32.2s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=37m 16s
+[REVIEWKD][070/300] loss=2.9154 ce=0.8517 hcl=3.4395 ramp=1.000 train_acc=97.86% val_acc=67.75% best=68.76% lr=0.00046316 time=33.1s avg_epoch=32.3s est_planned=2h 41m 41s elapsed=37m 49s
+[REVIEWKD][071/300] loss=2.8861 ce=0.8421 hcl=3.4066 ramp=1.000 train_acc=98.23% val_acc=67.94% best=68.76% lr=0.000461681 time=32.5s avg_epoch=32.3s est_planned=2h 41m 42s elapsed=38m 22s
+[REVIEWKD][072/300] loss=2.9064 ce=0.8548 hcl=3.4192 ramp=1.000 train_acc=97.76% val_acc=68.83% best=68.83% lr=0.000460175 time=32.7s avg_epoch=32.3s est_planned=2h 41m 43s elapsed=38m 54s saved_best
+[REVIEWKD][073/300] loss=2.8755 ce=0.8465 hcl=3.3817 ramp=1.000 train_acc=98.05% val_acc=67.61% best=68.83% lr=0.000458643 time=32.0s avg_epoch=32.3s est_planned=2h 41m 42s elapsed=39m 27s
+[REVIEWKD][074/300] loss=2.8548 ce=0.8439 hcl=3.3516 ramp=1.000 train_acc=98.17% val_acc=67.87% best=68.83% lr=0.000457085 time=32.1s avg_epoch=32.3s est_planned=2h 41m 41s elapsed=39m 59s
+[REVIEWKD][075/300] loss=2.8350 ce=0.8397 hcl=3.3254 ramp=1.000 train_acc=98.29% val_acc=67.88% best=68.83% lr=0.000455501 time=32.4s avg_epoch=32.3s est_planned=2h 41m 41s elapsed=40m 31s
+[REVIEWKD][076/300] loss=2.8524 ce=0.8490 hcl=3.3389 ramp=1.000 train_acc=97.94% val_acc=67.97% best=68.83% lr=0.00045389 time=32.4s avg_epoch=32.3s est_planned=2h 41m 42s elapsed=41m 04s
+[REVIEWKD][077/300] loss=2.8219 ce=0.8418 hcl=3.3001 ramp=1.000 train_acc=98.20% val_acc=68.16% best=68.83% lr=0.000452254 time=32.3s avg_epoch=32.3s est_planned=2h 41m 41s elapsed=41m 36s
+[REVIEWKD][078/300] loss=2.8080 ce=0.8398 hcl=3.2803 ramp=1.000 train_acc=98.24% val_acc=68.25% best=68.83% lr=0.000450593 time=32.7s avg_epoch=32.3s est_planned=2h 41m 43s elapsed=42m 09s
+[REVIEWKD][079/300] loss=2.8070 ce=0.8411 hcl=3.2765 ramp=1.000 train_acc=98.21% val_acc=67.73% best=68.83% lr=0.000448906 time=32.7s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=42m 41s
+[REVIEWKD][080/300] loss=2.8058 ce=0.8440 hcl=3.2698 ramp=1.000 train_acc=98.12% val_acc=68.44% best=68.83% lr=0.000447194 time=32.4s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=43m 14s
+[REVIEWKD][081/300] loss=2.7858 ce=0.8395 hcl=3.2438 ramp=1.000 train_acc=98.23% val_acc=68.67% best=68.83% lr=0.000445458 time=32.6s avg_epoch=32.4s est_planned=2h 41m 45s elapsed=43m 47s
+[REVIEWKD][082/300] loss=2.7849 ce=0.8400 hcl=3.2416 ramp=1.000 train_acc=98.21% val_acc=68.56% best=68.83% lr=0.000443697 time=32.4s avg_epoch=32.4s est_planned=2h 41m 46s elapsed=44m 19s
+[REVIEWKD][083/300] loss=2.7441 ce=0.8288 hcl=3.1921 ramp=1.000 train_acc=98.59% val_acc=69.23% best=69.23% lr=0.000441911 time=32.5s avg_epoch=32.4s est_planned=2h 41m 46s elapsed=44m 52s saved_best
+[REVIEWKD][084/300] loss=2.7286 ce=0.8269 hcl=3.1696 ramp=1.000 train_acc=98.70% val_acc=69.20% best=69.23% lr=0.000440101 time=32.2s avg_epoch=32.4s est_planned=2h 41m 46s elapsed=45m 24s
+[REVIEWKD][085/300] loss=2.7814 ce=0.8489 hcl=3.2208 ramp=1.000 train_acc=97.89% val_acc=69.19% best=69.23% lr=0.000438268 time=32.2s avg_epoch=32.4s est_planned=2h 41m 45s elapsed=45m 56s
+[REVIEWKD][086/300] loss=2.7436 ce=0.8356 hcl=3.1800 ramp=1.000 train_acc=98.38% val_acc=68.78% best=69.23% lr=0.000436411 time=32.1s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=46m 28s
+[REVIEWKD][087/300] loss=2.7234 ce=0.8327 hcl=3.1511 ramp=1.000 train_acc=98.49% val_acc=69.46% best=69.46% lr=0.00043453 time=32.4s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=47m 01s saved_best
+[REVIEWKD][088/300] loss=2.6887 ce=0.8232 hcl=3.1091 ramp=1.000 train_acc=98.84% val_acc=68.24% best=69.46% lr=0.000432626 time=32.4s avg_epoch=32.3s est_planned=2h 41m 45s elapsed=47m 33s
+[REVIEWKD][089/300] loss=2.7228 ce=0.8381 hcl=3.1413 ramp=1.000 train_acc=98.23% val_acc=68.30% best=69.46% lr=0.000430699 time=32.1s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=48m 05s
+[REVIEWKD][090/300] loss=2.6829 ce=0.8246 hcl=3.0972 ramp=1.000 train_acc=98.72% val_acc=68.31% best=69.46% lr=0.000428749 time=32.3s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=48m 38s
+[REVIEWKD][091/300] loss=2.7163 ce=0.8399 hcl=3.1274 ramp=1.000 train_acc=98.17% val_acc=67.78% best=69.46% lr=0.000426777 time=32.3s avg_epoch=32.3s est_planned=2h 41m 43s elapsed=49m 10s
+[REVIEWKD][092/300] loss=2.6956 ce=0.8319 hcl=3.1062 ramp=1.000 train_acc=98.45% val_acc=69.19% best=69.46% lr=0.000424782 time=32.2s avg_epoch=32.3s est_planned=2h 41m 43s elapsed=49m 42s
+[REVIEWKD][093/300] loss=2.6752 ce=0.8286 hcl=3.0777 ramp=1.000 train_acc=98.54% val_acc=68.75% best=69.46% lr=0.000422766 time=32.2s avg_epoch=32.3s est_planned=2h 41m 42s elapsed=50m 15s
+[REVIEWKD][094/300] loss=2.6629 ce=0.8267 hcl=3.0603 ramp=1.000 train_acc=98.57% val_acc=68.37% best=69.46% lr=0.000420727 time=31.9s avg_epoch=32.3s est_planned=2h 41m 41s elapsed=50m 47s
+[REVIEWKD][095/300] loss=2.6653 ce=0.8294 hcl=3.0597 ramp=1.000 train_acc=98.54% val_acc=69.55% best=69.55% lr=0.000418668 time=32.1s avg_epoch=32.3s est_planned=2h 41m 40s elapsed=51m 19s saved_best
+[REVIEWKD][096/300] loss=2.6383 ce=0.8216 hcl=3.0279 ramp=1.000 train_acc=98.79% val_acc=68.83% best=69.55% lr=0.000416587 time=32.1s avg_epoch=32.3s est_planned=2h 41m 39s elapsed=51m 51s
+[REVIEWKD][097/300] loss=2.6521 ce=0.8291 hcl=3.0382 ramp=1.000 train_acc=98.53% val_acc=69.35% best=69.55% lr=0.000414485 time=32.2s avg_epoch=32.3s est_planned=2h 41m 39s elapsed=52m 23s
+[REVIEWKD][098/300] loss=2.6337 ce=0.8262 hcl=3.0125 ramp=1.000 train_acc=98.63% val_acc=69.95% best=69.95% lr=0.000412362 time=32.1s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=52m 55s saved_best
+[REVIEWKD][099/300] loss=2.6373 ce=0.8293 hcl=3.0134 ramp=1.000 train_acc=98.52% val_acc=69.59% best=69.95% lr=0.000410219 time=31.9s avg_epoch=32.3s est_planned=2h 41m 37s elapsed=53m 27s
+[REVIEWKD][100/300] loss=2.6086 ce=0.8212 hcl=2.9790 ramp=1.000 train_acc=98.81% val_acc=68.89% best=69.95% lr=0.000408056 time=32.1s avg_epoch=32.3s est_planned=2h 41m 36s elapsed=54m 00s
+[REVIEWKD][101/300] loss=2.6046 ce=0.8215 hcl=2.9719 ramp=1.000 train_acc=98.75% val_acc=69.45% best=69.95% lr=0.000405872 time=32.1s avg_epoch=32.3s est_planned=2h 41m 36s elapsed=54m 32s
+[REVIEWKD][102/300] loss=2.6042 ce=0.8239 hcl=2.9671 ramp=1.000 train_acc=98.67% val_acc=69.15% best=69.95% lr=0.00040367 time=32.2s avg_epoch=32.3s est_planned=2h 41m 35s elapsed=55m 04s
+[REVIEWKD][103/300] loss=2.5866 ce=0.8194 hcl=2.9453 ramp=1.000 train_acc=98.82% val_acc=69.30% best=69.95% lr=0.000401448 time=31.9s avg_epoch=32.3s est_planned=2h 41m 34s elapsed=55m 36s
+[REVIEWKD][104/300] loss=2.5956 ce=0.8241 hcl=2.9525 ramp=1.000 train_acc=98.65% val_acc=68.59% best=69.95% lr=0.000399206 time=32.1s avg_epoch=32.3s est_planned=2h 41m 33s elapsed=56m 08s
+[REVIEWKD][105/300] loss=2.5983 ce=0.8263 hcl=2.9535 ramp=1.000 train_acc=98.60% val_acc=68.83% best=69.95% lr=0.000396946 time=32.2s avg_epoch=32.3s est_planned=2h 41m 33s elapsed=56m 40s
+[REVIEWKD][106/300] loss=2.5730 ce=0.8205 hcl=2.9208 ramp=1.000 train_acc=98.76% val_acc=69.86% best=69.95% lr=0.000394668 time=31.9s avg_epoch=32.3s est_planned=2h 41m 32s elapsed=57m 12s
+[REVIEWKD][107/300] loss=2.5554 ce=0.8171 hcl=2.8972 ramp=1.000 train_acc=98.91% val_acc=69.81% best=69.95% lr=0.000392371 time=32.0s avg_epoch=32.3s est_planned=2h 41m 31s elapsed=57m 44s
+[REVIEWKD][108/300] loss=2.5598 ce=0.8182 hcl=2.9026 ramp=1.000 train_acc=98.87% val_acc=70.01% best=70.01% lr=0.000390056 time=32.2s avg_epoch=32.3s est_planned=2h 41m 30s elapsed=58m 16s saved_best
+[REVIEWKD][109/300] loss=2.5723 ce=0.8255 hcl=2.9113 ramp=1.000 train_acc=98.62% val_acc=70.86% best=70.86% lr=0.000387724 time=32.0s avg_epoch=32.3s est_planned=2h 41m 30s elapsed=58m 49s saved_best
+[REVIEWKD][110/300] loss=2.5284 ce=0.8138 hcl=2.8576 ramp=1.000 train_acc=99.00% val_acc=68.98% best=70.86% lr=0.000385375 time=31.9s avg_epoch=32.3s est_planned=2h 41m 29s elapsed=59m 21s
+[REVIEWKD][111/300] loss=2.5513 ce=0.8215 hcl=2.8830 ramp=1.000 train_acc=98.72% val_acc=69.38% best=70.86% lr=0.000383008 time=31.9s avg_epoch=32.3s est_planned=2h 41m 28s elapsed=59m 53s
+[REVIEWKD][112/300] loss=2.5255 ce=0.8145 hcl=2.8517 ramp=1.000 train_acc=99.01% val_acc=69.63% best=70.86% lr=0.000380625 time=32.6s avg_epoch=32.3s est_planned=2h 41m 29s elapsed=1h 00m 25s
+[REVIEWKD][113/300] loss=2.5134 ce=0.8129 hcl=2.8343 ramp=1.000 train_acc=99.03% val_acc=69.92% best=70.86% lr=0.000378225 time=32.4s avg_epoch=32.3s est_planned=2h 41m 29s elapsed=1h 00m 58s
+[REVIEWKD][114/300] loss=2.5236 ce=0.8170 hcl=2.8443 ramp=1.000 train_acc=98.87% val_acc=69.48% best=70.86% lr=0.000375809 time=32.0s avg_epoch=32.3s est_planned=2h 41m 28s elapsed=1h 01m 30s
+[REVIEWKD][115/300] loss=2.5216 ce=0.8176 hcl=2.8401 ramp=1.000 train_acc=98.86% val_acc=69.56% best=70.86% lr=0.000373377 time=31.9s avg_epoch=32.3s est_planned=2h 41m 27s elapsed=1h 02m 02s
+[REVIEWKD][116/300] loss=2.4942 ce=0.8109 hcl=2.8055 ramp=1.000 train_acc=99.12% val_acc=70.58% best=70.86% lr=0.00037093 time=31.9s avg_epoch=32.3s est_planned=2h 41m 26s elapsed=1h 02m 34s
+[REVIEWKD][117/300] loss=2.5116 ce=0.8171 hcl=2.8243 ramp=1.000 train_acc=98.92% val_acc=69.70% best=70.86% lr=0.000368467 time=31.9s avg_epoch=32.3s est_planned=2h 41m 25s elapsed=1h 03m 06s
+[REVIEWKD][118/300] loss=2.4883 ce=0.8114 hcl=2.7948 ramp=1.000 train_acc=99.08% val_acc=70.10% best=70.86% lr=0.00036599 time=32.1s avg_epoch=32.3s est_planned=2h 41m 25s elapsed=1h 03m 38s
+[REVIEWKD][119/300] loss=2.4739 ce=0.8092 hcl=2.7744 ramp=1.000 train_acc=99.13% val_acc=69.76% best=70.86% lr=0.000363498 time=31.9s avg_epoch=32.3s est_planned=2h 41m 24s elapsed=1h 04m 10s
+[REVIEWKD][120/300] loss=2.4926 ce=0.8159 hcl=2.7946 ramp=1.000 train_acc=98.91% val_acc=68.85% best=70.86% lr=0.000360991 time=31.9s avg_epoch=32.3s est_planned=2h 41m 23s elapsed=1h 04m 42s
+[REVIEWKD][121/300] loss=2.4907 ce=0.8144 hcl=2.7939 ramp=1.000 train_acc=98.97% val_acc=69.88% best=70.86% lr=0.000358471 time=31.9s avg_epoch=32.3s est_planned=2h 41m 22s elapsed=1h 05m 14s
+[REVIEWKD][122/300] loss=2.4723 ce=0.8129 hcl=2.7656 ramp=1.000 train_acc=98.99% val_acc=69.67% best=70.86% lr=0.000355937 time=32.2s avg_epoch=32.3s est_planned=2h 41m 22s elapsed=1h 05m 46s
+[REVIEWKD][123/300] loss=2.4735 ce=0.8137 hcl=2.7664 ramp=1.000 train_acc=98.97% val_acc=69.29% best=70.86% lr=0.00035339 time=32.2s avg_epoch=32.3s est_planned=2h 41m 22s elapsed=1h 06m 18s
+[REVIEWKD][124/300] loss=2.4640 ce=0.8118 hcl=2.7536 ramp=1.000 train_acc=99.06% val_acc=70.35% best=70.86% lr=0.000350829 time=32.0s avg_epoch=32.3s est_planned=2h 41m 21s elapsed=1h 06m 50s
+[REVIEWKD][125/300] loss=2.4452 ce=0.8080 hcl=2.7286 ramp=1.000 train_acc=99.19% val_acc=70.11% best=70.86% lr=0.000348256 time=32.1s avg_epoch=32.3s est_planned=2h 41m 21s elapsed=1h 07m 23s
+[REVIEWKD][126/300] loss=2.4527 ce=0.8102 hcl=2.7375 ramp=1.000 train_acc=99.10% val_acc=69.61% best=70.86% lr=0.000345671 time=32.8s avg_epoch=32.3s est_planned=2h 41m 22s elapsed=1h 07m 55s
+[REVIEWKD][127/300] loss=2.4548 ce=0.8118 hcl=2.7383 ramp=1.000 train_acc=99.02% val_acc=70.38% best=70.86% lr=0.000343073 time=32.5s avg_epoch=32.3s est_planned=2h 41m 22s elapsed=1h 08m 28s
+[REVIEWKD][128/300] loss=2.4414 ce=0.8079 hcl=2.7226 ramp=1.000 train_acc=99.17% val_acc=70.54% best=70.86% lr=0.000340464 time=33.0s avg_epoch=32.3s est_planned=2h 41m 24s elapsed=1h 09m 01s
+[REVIEWKD][129/300] loss=2.4348 ce=0.8084 hcl=2.7106 ramp=1.000 train_acc=99.13% val_acc=69.88% best=70.86% lr=0.000337844 time=32.6s avg_epoch=32.3s est_planned=2h 41m 25s elapsed=1h 09m 34s
+[REVIEWKD][130/300] loss=2.4464 ce=0.8134 hcl=2.7216 ramp=1.000 train_acc=99.01% val_acc=70.32% best=70.86% lr=0.000335212 time=32.4s avg_epoch=32.3s est_planned=2h 41m 25s elapsed=1h 10m 06s
+[REVIEWKD][131/300] loss=2.4166 ce=0.8057 hcl=2.6848 ramp=1.000 train_acc=99.23% val_acc=70.83% best=70.86% lr=0.00033257 time=32.4s avg_epoch=32.3s est_planned=2h 41m 26s elapsed=1h 10m 39s
+[REVIEWKD][132/300] loss=2.4073 ce=0.8044 hcl=2.6716 ramp=1.000 train_acc=99.29% val_acc=70.81% best=70.86% lr=0.000329917 time=33.4s avg_epoch=32.3s est_planned=2h 41m 28s elapsed=1h 11m 12s
+[REVIEWKD][133/300] loss=2.4044 ce=0.8034 hcl=2.6683 ramp=1.000 train_acc=99.30% val_acc=69.55% best=70.86% lr=0.000327254 time=33.3s avg_epoch=32.3s est_planned=2h 41m 30s elapsed=1h 11m 45s
+[REVIEWKD][134/300] loss=2.4101 ce=0.8065 hcl=2.6727 ramp=1.000 train_acc=99.25% val_acc=70.72% best=70.86% lr=0.000324582 time=33.4s avg_epoch=32.3s est_planned=2h 41m 33s elapsed=1h 12m 19s
+[REVIEWKD][135/300] loss=2.4091 ce=0.8069 hcl=2.6703 ramp=1.000 train_acc=99.17% val_acc=70.23% best=70.86% lr=0.0003219 time=32.8s avg_epoch=32.3s est_planned=2h 41m 34s elapsed=1h 12m 52s
+[REVIEWKD][136/300] loss=2.4172 ce=0.8101 hcl=2.6784 ramp=1.000 train_acc=99.07% val_acc=70.39% best=70.86% lr=0.000319209 time=33.4s avg_epoch=32.3s est_planned=2h 41m 36s elapsed=1h 13m 25s
+[REVIEWKD][137/300] loss=2.3890 ce=0.8032 hcl=2.6430 ramp=1.000 train_acc=99.29% val_acc=71.16% best=71.16% lr=0.000316509 time=33.1s avg_epoch=32.3s est_planned=2h 41m 38s elapsed=1h 13m 59s saved_best
+[REVIEWKD][138/300] loss=2.3987 ce=0.8079 hcl=2.6513 ramp=1.000 train_acc=99.15% val_acc=70.02% best=71.16% lr=0.000313801 time=32.9s avg_epoch=32.3s est_planned=2h 41m 39s elapsed=1h 14m 31s
+[REVIEWKD][139/300] loss=2.3971 ce=0.8072 hcl=2.6499 ramp=1.000 train_acc=99.15% val_acc=70.01% best=71.16% lr=0.000311085 time=32.8s avg_epoch=32.3s est_planned=2h 41m 40s elapsed=1h 15m 04s
+[REVIEWKD][140/300] loss=2.3755 ce=0.8029 hcl=2.6211 ramp=1.000 train_acc=99.29% val_acc=70.36% best=71.16% lr=0.000308361 time=32.3s avg_epoch=32.3s est_planned=2h 41m 40s elapsed=1h 15m 37s
+[REVIEWKD][141/300] loss=2.3681 ce=0.8008 hcl=2.6122 ramp=1.000 train_acc=99.38% val_acc=70.67% best=71.16% lr=0.00030563 time=33.3s avg_epoch=32.3s est_planned=2h 41m 42s elapsed=1h 16m 10s
+[REVIEWKD][142/300] loss=2.3651 ce=0.8004 hcl=2.6077 ramp=1.000 train_acc=99.38% val_acc=71.50% best=71.50% lr=0.000302892 time=32.6s avg_epoch=32.3s est_planned=2h 41m 43s elapsed=1h 16m 43s saved_best
+[REVIEWKD][143/300] loss=2.3710 ce=0.8039 hcl=2.6118 ramp=1.000 train_acc=99.30% val_acc=70.19% best=71.50% lr=0.000300147 time=32.9s avg_epoch=32.3s est_planned=2h 41m 44s elapsed=1h 17m 16s
+[REVIEWKD][144/300] loss=2.3695 ce=0.8043 hcl=2.6087 ramp=1.000 train_acc=99.28% val_acc=70.93% best=71.50% lr=0.000297396 time=32.6s avg_epoch=32.3s est_planned=2h 41m 45s elapsed=1h 17m 48s
+[REVIEWKD][145/300] loss=2.3484 ce=0.7995 hcl=2.5815 ramp=1.000 train_acc=99.45% val_acc=70.69% best=71.50% lr=0.000294639 time=32.9s avg_epoch=32.4s est_planned=2h 41m 46s elapsed=1h 18m 21s
+[REVIEWKD][146/300] loss=2.3616 ce=0.8040 hcl=2.5961 ramp=1.000 train_acc=99.27% val_acc=70.41% best=71.50% lr=0.000291877 time=33.2s avg_epoch=32.4s est_planned=2h 41m 47s elapsed=1h 18m 55s
+[REVIEWKD][147/300] loss=2.3449 ce=0.8010 hcl=2.5732 ramp=1.000 train_acc=99.35% val_acc=70.79% best=71.50% lr=0.000289109 time=33.3s avg_epoch=32.4s est_planned=2h 41m 49s elapsed=1h 19m 28s
+[REVIEWKD][148/300] loss=2.3594 ce=0.8048 hcl=2.5911 ramp=1.000 train_acc=99.23% val_acc=70.45% best=71.50% lr=0.000286336 time=33.3s avg_epoch=32.4s est_planned=2h 41m 51s elapsed=1h 20m 01s
+[REVIEWKD][149/300] loss=2.3386 ce=0.8003 hcl=2.5638 ramp=1.000 train_acc=99.41% val_acc=70.59% best=71.50% lr=0.000283558 time=32.7s avg_epoch=32.4s est_planned=2h 41m 52s elapsed=1h 20m 34s
+[REVIEWKD][150/300] loss=2.3408 ce=0.8019 hcl=2.5648 ramp=1.000 train_acc=99.36% val_acc=70.97% best=71.50% lr=0.000280777 time=33.0s avg_epoch=32.4s est_planned=2h 41m 53s elapsed=1h 21m 07s
+[REVIEWKD][151/300] loss=2.3250 ce=0.7981 hcl=2.5448 ramp=1.000 train_acc=99.46% val_acc=69.88% best=71.50% lr=0.000277991 time=33.2s avg_epoch=32.4s est_planned=2h 41m 55s elapsed=1h 21m 40s
+[REVIEWKD][152/300] loss=2.3281 ce=0.8000 hcl=2.5468 ramp=1.000 train_acc=99.40% val_acc=70.08% best=71.50% lr=0.000275202 time=32.9s avg_epoch=32.4s est_planned=2h 41m 56s elapsed=1h 22m 13s
+[REVIEWKD][153/300] loss=2.3374 ce=0.8035 hcl=2.5565 ramp=1.000 train_acc=99.25% val_acc=70.01% best=71.50% lr=0.00027241 time=33.4s avg_epoch=32.4s est_planned=2h 41m 58s elapsed=1h 22m 47s
+[REVIEWKD][154/300] loss=2.3077 ce=0.7970 hcl=2.5178 ramp=1.000 train_acc=99.50% val_acc=71.28% best=71.50% lr=0.000269615 time=33.7s avg_epoch=32.4s est_planned=2h 42m 00s elapsed=1h 23m 21s
+[REVIEWKD][155/300] loss=2.3032 ce=0.7951 hcl=2.5134 ramp=1.000 train_acc=99.57% val_acc=70.56% best=71.50% lr=0.000266817 time=33.0s avg_epoch=32.4s est_planned=2h 42m 02s elapsed=1h 23m 54s
+[REVIEWKD][156/300] loss=2.3159 ce=0.7995 hcl=2.5274 ramp=1.000 train_acc=99.40% val_acc=70.91% best=71.50% lr=0.000264018 time=33.2s avg_epoch=32.4s est_planned=2h 42m 03s elapsed=1h 24m 27s
+[REVIEWKD][157/300] loss=2.2872 ce=0.7927 hcl=2.4908 ramp=1.000 train_acc=99.65% val_acc=70.75% best=71.50% lr=0.000261216 time=33.0s avg_epoch=32.4s est_planned=2h 42m 04s elapsed=1h 25m 00s
+[REVIEWKD][158/300] loss=2.3149 ce=0.8013 hcl=2.5226 ramp=1.000 train_acc=99.33% val_acc=70.39% best=71.50% lr=0.000258413 time=33.2s avg_epoch=32.4s est_planned=2h 42m 06s elapsed=1h 25m 33s
+[REVIEWKD][159/300] loss=2.3156 ce=0.8007 hcl=2.5248 ramp=1.000 train_acc=99.40% val_acc=70.85% best=71.50% lr=0.00025561 time=33.1s avg_epoch=32.4s est_planned=2h 42m 07s elapsed=1h 26m 07s
+[REVIEWKD][160/300] loss=2.2857 ce=0.7944 hcl=2.4855 ramp=1.000 train_acc=99.55% val_acc=71.34% best=71.50% lr=0.000252805 time=33.0s avg_epoch=32.4s est_planned=2h 42m 08s elapsed=1h 26m 40s
+[REVIEWKD][161/300] loss=2.2860 ce=0.7963 hcl=2.4828 ramp=1.000 train_acc=99.47% val_acc=70.48% best=71.50% lr=0.00025 time=32.7s avg_epoch=32.4s est_planned=2h 42m 09s elapsed=1h 27m 12s
+[REVIEWKD][162/300] loss=2.3003 ce=0.8002 hcl=2.5002 ramp=1.000 train_acc=99.35% val_acc=70.94% best=71.50% lr=0.000247195 time=32.9s avg_epoch=32.4s est_planned=2h 42m 10s elapsed=1h 27m 45s
+[REVIEWKD][163/300] loss=2.2815 ce=0.7955 hcl=2.4766 ramp=1.000 train_acc=99.53% val_acc=70.73% best=71.50% lr=0.00024439 time=32.5s avg_epoch=32.4s est_planned=2h 42m 10s elapsed=1h 28m 18s
+[REVIEWKD][164/300] loss=2.2826 ce=0.7964 hcl=2.4771 ramp=1.000 train_acc=99.47% val_acc=71.19% best=71.50% lr=0.000241587 time=32.7s avg_epoch=32.4s est_planned=2h 42m 10s elapsed=1h 28m 51s
+[REVIEWKD][165/300] loss=2.2663 ce=0.7928 hcl=2.4559 ramp=1.000 train_acc=99.61% val_acc=70.68% best=71.50% lr=0.000238784 time=32.8s avg_epoch=32.4s est_planned=2h 42m 11s elapsed=1h 29m 23s
+[REVIEWKD][166/300] loss=2.2744 ce=0.7961 hcl=2.4638 ramp=1.000 train_acc=99.49% val_acc=70.89% best=71.50% lr=0.000235982 time=33.0s avg_epoch=32.4s est_planned=2h 42m 12s elapsed=1h 29m 57s
+[REVIEWKD][167/300] loss=2.2745 ce=0.7964 hcl=2.4635 ramp=1.000 train_acc=99.48% val_acc=70.37% best=71.50% lr=0.000233183 time=32.6s avg_epoch=32.4s est_planned=2h 42m 12s elapsed=1h 30m 29s
+[REVIEWKD][168/300] loss=2.2681 ce=0.7963 hcl=2.4530 ramp=1.000 train_acc=99.52% val_acc=71.55% best=71.55% lr=0.000230385 time=32.9s avg_epoch=32.4s est_planned=2h 42m 13s elapsed=1h 31m 02s saved_best
+[REVIEWKD][169/300] loss=2.2462 ce=0.7909 hcl=2.4255 ramp=1.000 train_acc=99.71% val_acc=72.15% best=72.15% lr=0.00022759 time=33.3s avg_epoch=32.4s est_planned=2h 42m 15s elapsed=1h 31m 36s saved_best
+[REVIEWKD][170/300] loss=2.2637 ce=0.7964 hcl=2.4455 ramp=1.000 train_acc=99.47% val_acc=70.92% best=72.15% lr=0.000224798 time=33.4s avg_epoch=32.5s est_planned=2h 42m 16s elapsed=1h 32m 09s
+[REVIEWKD][171/300] loss=2.2507 ce=0.7931 hcl=2.4294 ramp=1.000 train_acc=99.60% val_acc=70.64% best=72.15% lr=0.000222009 time=32.8s avg_epoch=32.5s est_planned=2h 42m 17s elapsed=1h 32m 42s
+[REVIEWKD][172/300] loss=2.2467 ce=0.7930 hcl=2.4227 ramp=1.000 train_acc=99.59% val_acc=71.72% best=72.15% lr=0.000219223 time=33.3s avg_epoch=32.5s est_planned=2h 42m 18s elapsed=1h 33m 15s
+[REVIEWKD][173/300] loss=2.2369 ce=0.7910 hcl=2.4097 ramp=1.000 train_acc=99.66% val_acc=71.45% best=72.15% lr=0.000216442 time=33.0s avg_epoch=32.5s est_planned=2h 42m 19s elapsed=1h 33m 48s
+[REVIEWKD][174/300] loss=2.2456 ce=0.7944 hcl=2.4187 ramp=1.000 train_acc=99.55% val_acc=70.37% best=72.15% lr=0.000213664 time=33.5s avg_epoch=32.5s est_planned=2h 42m 21s elapsed=1h 34m 22s
+[REVIEWKD][175/300] loss=2.2482 ce=0.7949 hcl=2.4223 ramp=1.000 train_acc=99.56% val_acc=71.58% best=72.15% lr=0.000210891 time=32.9s avg_epoch=32.5s est_planned=2h 42m 22s elapsed=1h 34m 55s
+[REVIEWKD][176/300] loss=2.2223 ce=0.7901 hcl=2.3870 ramp=1.000 train_acc=99.67% val_acc=71.35% best=72.15% lr=0.000208123 time=32.8s avg_epoch=32.5s est_planned=2h 42m 23s elapsed=1h 35m 28s
+[REVIEWKD][177/300] loss=2.2188 ce=0.7892 hcl=2.3828 ramp=1.000 train_acc=99.72% val_acc=71.41% best=72.15% lr=0.000205361 time=33.2s avg_epoch=32.5s est_planned=2h 42m 24s elapsed=1h 36m 01s
+[REVIEWKD][178/300] loss=2.2162 ce=0.7889 hcl=2.3788 ramp=1.000 train_acc=99.73% val_acc=71.54% best=72.15% lr=0.000202604 time=32.7s avg_epoch=32.5s est_planned=2h 42m 24s elapsed=1h 36m 34s
+[REVIEWKD][179/300] loss=2.2157 ce=0.7910 hcl=2.3746 ramp=1.000 train_acc=99.64% val_acc=70.69% best=72.15% lr=0.000199853 time=33.0s avg_epoch=32.5s est_planned=2h 42m 25s elapsed=1h 37m 07s
+[REVIEWKD][180/300] loss=2.2323 ce=0.7943 hcl=2.3966 ramp=1.000 train_acc=99.55% val_acc=69.96% best=72.15% lr=0.000197108 time=33.5s avg_epoch=32.5s est_planned=2h 42m 27s elapsed=1h 37m 40s
+[REVIEWKD][181/300] loss=2.2159 ce=0.7910 hcl=2.3747 ramp=1.000 train_acc=99.65% val_acc=71.90% best=72.15% lr=0.00019437 time=33.1s avg_epoch=32.5s est_planned=2h 42m 28s elapsed=1h 38m 14s
+[REVIEWKD][182/300] loss=2.2059 ce=0.7892 hcl=2.3612 ramp=1.000 train_acc=99.71% val_acc=71.14% best=72.15% lr=0.000191639 time=33.3s avg_epoch=32.5s est_planned=2h 42m 29s elapsed=1h 38m 47s
+[REVIEWKD][183/300] loss=2.2186 ce=0.7925 hcl=2.3768 ramp=1.000 train_acc=99.58% val_acc=71.18% best=72.15% lr=0.000188915 time=32.8s avg_epoch=32.5s est_planned=2h 42m 30s elapsed=1h 39m 20s
+[REVIEWKD][184/300] loss=2.1947 ce=0.7875 hcl=2.3454 ramp=1.000 train_acc=99.78% val_acc=71.68% best=72.15% lr=0.000186199 time=33.1s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 39m 53s
+[REVIEWKD][185/300] loss=2.2065 ce=0.7906 hcl=2.3598 ramp=1.000 train_acc=99.64% val_acc=71.31% best=72.15% lr=0.000183491 time=33.1s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 40m 26s
+[REVIEWKD][186/300] loss=2.1910 ce=0.7883 hcl=2.3379 ramp=1.000 train_acc=99.74% val_acc=71.41% best=72.15% lr=0.000180791 time=32.5s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 40m 59s
+[REVIEWKD][187/300] loss=2.1850 ce=0.7866 hcl=2.3307 ramp=1.000 train_acc=99.79% val_acc=71.69% best=72.15% lr=0.0001781 time=32.7s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 41m 31s
+[REVIEWKD][188/300] loss=2.2049 ce=0.7924 hcl=2.3541 ramp=1.000 train_acc=99.56% val_acc=70.80% best=72.15% lr=0.000175418 time=32.5s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 42m 04s
+[REVIEWKD][189/300] loss=2.1865 ce=0.7876 hcl=2.3316 ramp=1.000 train_acc=99.76% val_acc=71.48% best=72.15% lr=0.000172746 time=32.8s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 42m 37s
+[REVIEWKD][190/300] loss=2.1785 ce=0.7869 hcl=2.3193 ramp=1.000 train_acc=99.79% val_acc=71.18% best=72.15% lr=0.000170083 time=32.0s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 43m 09s
+[REVIEWKD][191/300] loss=2.1728 ce=0.7859 hcl=2.3115 ramp=1.000 train_acc=99.79% val_acc=71.55% best=72.15% lr=0.00016743 time=32.1s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 43m 41s
+[REVIEWKD][192/300] loss=2.1686 ce=0.7857 hcl=2.3047 ramp=1.000 train_acc=99.81% val_acc=71.90% best=72.15% lr=0.000164788 time=32.5s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 44m 14s
+[REVIEWKD][193/300] loss=2.1829 ce=0.7905 hcl=2.3206 ramp=1.000 train_acc=99.65% val_acc=71.11% best=72.15% lr=0.000162156 time=32.7s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 44m 46s
+[REVIEWKD][194/300] loss=2.1712 ce=0.7877 hcl=2.3059 ramp=1.000 train_acc=99.75% val_acc=71.30% best=72.15% lr=0.000159536 time=32.7s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 45m 19s
+[REVIEWKD][195/300] loss=2.1721 ce=0.7881 hcl=2.3067 ramp=1.000 train_acc=99.72% val_acc=71.82% best=72.15% lr=0.000156927 time=32.5s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 45m 52s
+[REVIEWKD][196/300] loss=2.1570 ce=0.7855 hcl=2.2859 ramp=1.000 train_acc=99.82% val_acc=71.91% best=72.15% lr=0.000154329 time=32.5s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 46m 24s
+[REVIEWKD][197/300] loss=2.1560 ce=0.7856 hcl=2.2840 ramp=1.000 train_acc=99.81% val_acc=72.45% best=72.45% lr=0.000151744 time=32.6s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 46m 57s saved_best
+[REVIEWKD][198/300] loss=2.1591 ce=0.7871 hcl=2.2867 ramp=1.000 train_acc=99.73% val_acc=71.94% best=72.45% lr=0.000149171 time=33.1s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 47m 30s
+[REVIEWKD][199/300] loss=2.1623 ce=0.7884 hcl=2.2899 ramp=1.000 train_acc=99.71% val_acc=72.14% best=72.45% lr=0.00014661 time=32.4s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 48m 03s
+[REVIEWKD][200/300] loss=2.1556 ce=0.7877 hcl=2.2799 ramp=1.000 train_acc=99.75% val_acc=72.30% best=72.45% lr=0.000144063 time=33.0s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 48m 36s
+[REVIEWKD][201/300] loss=2.1557 ce=0.7873 hcl=2.2807 ramp=1.000 train_acc=99.74% val_acc=72.15% best=72.45% lr=0.000141529 time=32.6s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 49m 08s
+[REVIEWKD][202/300] loss=2.1426 ce=0.7850 hcl=2.2627 ramp=1.000 train_acc=99.83% val_acc=72.35% best=72.45% lr=0.000139009 time=32.4s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 49m 41s
+[REVIEWKD][203/300] loss=2.1324 ce=0.7834 hcl=2.2484 ramp=1.000 train_acc=99.86% val_acc=72.18% best=72.45% lr=0.000136502 time=32.6s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 50m 13s
+[REVIEWKD][204/300] loss=2.1370 ce=0.7854 hcl=2.2527 ramp=1.000 train_acc=99.82% val_acc=72.38% best=72.45% lr=0.00013401 time=32.6s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 50m 46s
+[REVIEWKD][205/300] loss=2.1361 ce=0.7855 hcl=2.2511 ramp=1.000 train_acc=99.81% val_acc=71.30% best=72.45% lr=0.000131533 time=32.1s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 51m 18s
+[REVIEWKD][206/300] loss=2.1334 ce=0.7845 hcl=2.2481 ramp=1.000 train_acc=99.83% val_acc=71.87% best=72.45% lr=0.00012907 time=32.0s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 51m 50s
+[REVIEWKD][207/300] loss=2.1268 ce=0.7842 hcl=2.2377 ramp=1.000 train_acc=99.84% val_acc=72.19% best=72.45% lr=0.000126623 time=32.3s avg_epoch=32.5s est_planned=2h 42m 31s elapsed=1h 52m 23s
+[REVIEWKD][208/300] loss=2.1200 ce=0.7827 hcl=2.2289 ramp=1.000 train_acc=99.89% val_acc=72.72% best=72.72% lr=0.000124191 time=32.9s avg_epoch=32.5s est_planned=2h 42m 32s elapsed=1h 52m 56s saved_best
+[REVIEWKD][209/300] loss=2.1157 ce=0.7823 hcl=2.2222 ramp=1.000 train_acc=99.92% val_acc=72.15% best=72.72% lr=0.000121775 time=33.5s avg_epoch=32.5s est_planned=2h 42m 33s elapsed=1h 53m 29s
+[REVIEWKD][210/300] loss=2.1209 ce=0.7836 hcl=2.2289 ramp=1.000 train_acc=99.85% val_acc=72.11% best=72.72% lr=0.000119375 time=33.2s avg_epoch=32.5s est_planned=2h 42m 34s elapsed=1h 54m 02s
+[REVIEWKD][211/300] loss=2.1098 ce=0.7816 hcl=2.2136 ramp=1.000 train_acc=99.92% val_acc=72.31% best=72.72% lr=0.000116992 time=33.1s avg_epoch=32.5s est_planned=2h 42m 35s elapsed=1h 54m 36s
+[REVIEWKD][212/300] loss=2.1113 ce=0.7827 hcl=2.2144 ramp=1.000 train_acc=99.90% val_acc=72.47% best=72.72% lr=0.000114625 time=33.3s avg_epoch=32.5s est_planned=2h 42m 36s elapsed=1h 55m 09s
+[REVIEWKD][213/300] loss=2.1289 ce=0.7865 hcl=2.2374 ramp=1.000 train_acc=99.79% val_acc=71.77% best=72.72% lr=0.000112276 time=32.9s avg_epoch=32.5s est_planned=2h 42m 37s elapsed=1h 55m 42s
+[REVIEWKD][214/300] loss=2.1146 ce=0.7846 hcl=2.2166 ramp=1.000 train_acc=99.84% val_acc=72.26% best=72.72% lr=0.000109944 time=32.7s avg_epoch=32.5s est_planned=2h 42m 37s elapsed=1h 56m 15s
+[REVIEWKD][215/300] loss=2.1021 ce=0.7822 hcl=2.1998 ramp=1.000 train_acc=99.91% val_acc=72.77% best=72.77% lr=0.000107629 time=32.8s avg_epoch=32.5s est_planned=2h 42m 38s elapsed=1h 56m 48s saved_best
+[REVIEWKD][216/300] loss=2.0985 ce=0.7819 hcl=2.1943 ramp=1.000 train_acc=99.92% val_acc=72.26% best=72.77% lr=0.000105332 time=32.8s avg_epoch=32.5s est_planned=2h 42m 38s elapsed=1h 57m 20s
+[REVIEWKD][217/300] loss=2.0966 ce=0.7818 hcl=2.1914 ramp=1.000 train_acc=99.93% val_acc=72.69% best=72.77% lr=0.000103054 time=32.7s avg_epoch=32.5s est_planned=2h 42m 38s elapsed=1h 57m 53s
+[REVIEWKD][218/300] loss=2.0951 ce=0.7817 hcl=2.1890 ramp=1.000 train_acc=99.90% val_acc=72.42% best=72.77% lr=0.000100794 time=32.4s avg_epoch=32.5s est_planned=2h 42m 38s elapsed=1h 58m 26s
+[REVIEWKD][219/300] loss=2.0977 ce=0.7830 hcl=2.1912 ramp=1.000 train_acc=99.87% val_acc=71.75% best=72.77% lr=9.85525e-05 time=33.6s avg_epoch=32.5s est_planned=2h 42m 39s elapsed=1h 58m 59s
+[REVIEWKD][220/300] loss=2.1051 ce=0.7849 hcl=2.2004 ramp=1.000 train_acc=99.81% val_acc=71.29% best=72.77% lr=9.63303e-05 time=33.8s avg_epoch=32.5s est_planned=2h 42m 41s elapsed=1h 59m 33s
+[REVIEWKD][221/300] loss=2.0909 ce=0.7819 hcl=2.1818 ramp=1.000 train_acc=99.92% val_acc=72.63% best=72.77% lr=9.41275e-05 time=33.7s avg_epoch=32.5s est_planned=2h 42m 43s elapsed=2h 00m 07s
+[REVIEWKD][222/300] loss=2.0929 ce=0.7833 hcl=2.1827 ramp=1.000 train_acc=99.86% val_acc=72.80% best=72.80% lr=9.19444e-05 time=33.5s avg_epoch=32.5s est_planned=2h 42m 44s elapsed=2h 00m 41s saved_best
+[REVIEWKD][223/300] loss=2.0820 ce=0.7811 hcl=2.1681 ramp=1.000 train_acc=99.92% val_acc=72.31% best=72.80% lr=8.97811e-05 time=33.5s avg_epoch=32.6s est_planned=2h 42m 45s elapsed=2h 01m 14s
+[REVIEWKD][224/300] loss=2.0804 ce=0.7811 hcl=2.1655 ramp=1.000 train_acc=99.92% val_acc=72.44% best=72.80% lr=8.7638e-05 time=33.4s avg_epoch=32.6s est_planned=2h 42m 46s elapsed=2h 01m 48s
+[REVIEWKD][225/300] loss=2.0822 ce=0.7819 hcl=2.1672 ramp=1.000 train_acc=99.90% val_acc=72.25% best=72.80% lr=8.55153e-05 time=33.1s avg_epoch=32.6s est_planned=2h 42m 47s elapsed=2h 02m 21s
+[REVIEWKD][226/300] loss=2.0801 ce=0.7819 hcl=2.1636 ramp=1.000 train_acc=99.90% val_acc=72.08% best=72.80% lr=8.34134e-05 time=33.1s avg_epoch=32.6s est_planned=2h 42m 48s elapsed=2h 02m 54s
+[REVIEWKD][227/300] loss=2.0772 ce=0.7818 hcl=2.1590 ramp=1.000 train_acc=99.91% val_acc=72.25% best=72.80% lr=8.13324e-05 time=33.4s avg_epoch=32.6s est_planned=2h 42m 49s elapsed=2h 03m 27s
+[REVIEWKD][228/300] loss=2.0730 ce=0.7811 hcl=2.1532 ramp=1.000 train_acc=99.92% val_acc=72.21% best=72.80% lr=7.92726e-05 time=33.2s avg_epoch=32.6s est_planned=2h 42m 50s elapsed=2h 04m 01s
+[REVIEWKD][229/300] loss=2.0733 ce=0.7811 hcl=2.1535 ramp=1.000 train_acc=99.93% val_acc=72.61% best=72.80% lr=7.72343e-05 time=33.3s avg_epoch=32.6s est_planned=2h 42m 51s elapsed=2h 04m 34s
+[REVIEWKD][230/300] loss=2.0707 ce=0.7812 hcl=2.1492 ramp=1.000 train_acc=99.90% val_acc=72.33% best=72.80% lr=7.52178e-05 time=33.3s avg_epoch=32.6s est_planned=2h 42m 52s elapsed=2h 05m 07s
+[REVIEWKD][231/300] loss=2.0651 ce=0.7803 hcl=2.1414 ramp=1.000 train_acc=99.95% val_acc=72.24% best=72.80% lr=7.32233e-05 time=33.2s avg_epoch=32.6s est_planned=2h 42m 53s elapsed=2h 05m 41s
+[REVIEWKD][232/300] loss=2.0664 ce=0.7810 hcl=2.1424 ramp=1.000 train_acc=99.94% val_acc=72.44% best=72.80% lr=7.1251e-05 time=33.6s avg_epoch=32.6s est_planned=2h 42m 54s elapsed=2h 06m 14s
+[REVIEWKD][233/300] loss=2.0661 ce=0.7814 hcl=2.1412 ramp=1.000 train_acc=99.91% val_acc=72.37% best=72.80% lr=6.93013e-05 time=33.6s avg_epoch=32.6s est_planned=2h 42m 55s elapsed=2h 06m 48s
+[REVIEWKD][234/300] loss=2.0611 ce=0.7810 hcl=2.1335 ramp=1.000 train_acc=99.93% val_acc=72.11% best=72.80% lr=6.73743e-05 time=33.7s avg_epoch=32.6s est_planned=2h 42m 57s elapsed=2h 07m 22s
+[REVIEWKD][235/300] loss=2.0592 ce=0.7807 hcl=2.1309 ramp=1.000 train_acc=99.94% val_acc=72.65% best=72.80% lr=6.54703e-05 time=33.6s avg_epoch=32.6s est_planned=2h 42m 58s elapsed=2h 07m 55s
+[REVIEWKD][236/300] loss=2.0606 ce=0.7812 hcl=2.1324 ramp=1.000 train_acc=99.91% val_acc=72.84% best=72.84% lr=6.35895e-05 time=33.6s avg_epoch=32.6s est_planned=2h 42m 59s elapsed=2h 08m 29s saved_best
+[REVIEWKD][237/300] loss=2.0558 ce=0.7802 hcl=2.1259 ramp=1.000 train_acc=99.95% val_acc=72.51% best=72.84% lr=6.17321e-05 time=33.6s avg_epoch=32.6s est_planned=2h 43m 01s elapsed=2h 09m 03s
+[REVIEWKD][238/300] loss=2.0552 ce=0.7810 hcl=2.1237 ramp=1.000 train_acc=99.93% val_acc=72.56% best=72.84% lr=5.98985e-05 time=33.3s avg_epoch=32.6s est_planned=2h 43m 02s elapsed=2h 09m 36s
+[REVIEWKD][239/300] loss=2.0499 ce=0.7798 hcl=2.1168 ramp=1.000 train_acc=99.95% val_acc=72.35% best=72.84% lr=5.80888e-05 time=33.7s avg_epoch=32.6s est_planned=2h 43m 03s elapsed=2h 10m 10s
+[REVIEWKD][240/300] loss=2.0487 ce=0.7799 hcl=2.1146 ramp=1.000 train_acc=99.96% val_acc=72.47% best=72.84% lr=5.63033e-05 time=33.5s avg_epoch=32.6s est_planned=2h 43m 04s elapsed=2h 10m 44s
+[REVIEWKD][241/300] loss=2.0467 ce=0.7797 hcl=2.1117 ramp=1.000 train_acc=99.96% val_acc=71.59% best=72.84% lr=5.45421e-05 time=33.2s avg_epoch=32.6s est_planned=2h 43m 05s elapsed=2h 11m 17s
+[REVIEWKD][242/300] loss=2.0509 ce=0.7811 hcl=2.1162 ramp=1.000 train_acc=99.92% val_acc=72.16% best=72.84% lr=5.28056e-05 time=33.3s avg_epoch=32.6s est_planned=2h 43m 06s elapsed=2h 11m 50s
+[REVIEWKD][243/300] loss=2.0453 ce=0.7800 hcl=2.1088 ramp=1.000 train_acc=99.96% val_acc=72.36% best=72.84% lr=5.10939e-05 time=33.3s avg_epoch=32.6s est_planned=2h 43m 06s elapsed=2h 12m 24s
+[REVIEWKD][244/300] loss=2.0424 ce=0.7798 hcl=2.1044 ramp=1.000 train_acc=99.96% val_acc=72.22% best=72.84% lr=4.94072e-05 time=33.5s avg_epoch=32.6s est_planned=2h 43m 08s elapsed=2h 12m 57s
+[REVIEWKD][245/300] loss=2.0420 ce=0.7801 hcl=2.1031 ramp=1.000 train_acc=99.94% val_acc=72.28% best=72.84% lr=4.77458e-05 time=33.0s avg_epoch=32.6s est_planned=2h 43m 08s elapsed=2h 13m 30s
+[REVIEWKD][246/300] loss=2.0401 ce=0.7799 hcl=2.1003 ramp=1.000 train_acc=99.95% val_acc=72.65% best=72.84% lr=4.61098e-05 time=33.5s avg_epoch=32.6s est_planned=2h 43m 09s elapsed=2h 14m 04s
+[REVIEWKD][247/300] loss=2.0403 ce=0.7805 hcl=2.0997 ramp=1.000 train_acc=99.93% val_acc=72.25% best=72.84% lr=4.44995e-05 time=33.7s avg_epoch=32.6s est_planned=2h 43m 10s elapsed=2h 14m 37s
+[REVIEWKD][248/300] loss=2.0373 ce=0.7799 hcl=2.0958 ramp=1.000 train_acc=99.96% val_acc=72.78% best=72.84% lr=4.2915e-05 time=33.4s avg_epoch=32.6s est_planned=2h 43m 11s elapsed=2h 15m 11s
+[REVIEWKD][249/300] loss=2.0348 ce=0.7798 hcl=2.0916 ramp=1.000 train_acc=99.95% val_acc=72.41% best=72.84% lr=4.13567e-05 time=33.4s avg_epoch=32.6s est_planned=2h 43m 12s elapsed=2h 15m 44s
+[REVIEWKD][250/300] loss=2.0327 ce=0.7796 hcl=2.0885 ramp=1.000 train_acc=99.97% val_acc=72.43% best=72.84% lr=3.98246e-05 time=33.0s avg_epoch=32.6s est_planned=2h 43m 12s elapsed=2h 16m 17s
+[REVIEWKD][251/300] loss=2.0322 ce=0.7797 hcl=2.0875 ramp=1.000 train_acc=99.96% val_acc=72.43% best=72.84% lr=3.8319e-05 time=33.2s avg_epoch=32.6s est_planned=2h 43m 13s elapsed=2h 16m 51s
+[REVIEWKD][252/300] loss=2.0319 ce=0.7799 hcl=2.0866 ramp=1.000 train_acc=99.95% val_acc=72.27% best=72.84% lr=3.684e-05 time=33.0s avg_epoch=32.6s est_planned=2h 43m 14s elapsed=2h 17m 24s
+[REVIEWKD][253/300] loss=2.0280 ce=0.7794 hcl=2.0810 ramp=1.000 train_acc=99.97% val_acc=72.27% best=72.84% lr=3.53878e-05 time=32.7s avg_epoch=32.6s est_planned=2h 43m 14s elapsed=2h 17m 56s
+[REVIEWKD][254/300] loss=2.0284 ce=0.7797 hcl=2.0812 ramp=1.000 train_acc=99.95% val_acc=72.08% best=72.84% lr=3.39627e-05 time=32.8s avg_epoch=32.6s est_planned=2h 43m 14s elapsed=2h 18m 29s
+[REVIEWKD][255/300] loss=2.0272 ce=0.7796 hcl=2.0794 ramp=1.000 train_acc=99.96% val_acc=72.61% best=72.84% lr=3.25647e-05 time=33.5s avg_epoch=32.6s est_planned=2h 43m 15s elapsed=2h 19m 03s
+[REVIEWKD][256/300] loss=2.0271 ce=0.7797 hcl=2.0790 ramp=1.000 train_acc=99.96% val_acc=72.27% best=72.84% lr=3.11941e-05 time=33.1s avg_epoch=32.7s est_planned=2h 43m 15s elapsed=2h 19m 36s
+[REVIEWKD][257/300] loss=2.0236 ce=0.7794 hcl=2.0736 ramp=1.000 train_acc=99.96% val_acc=72.33% best=72.84% lr=2.98511e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 16s elapsed=2h 20m 09s
+[REVIEWKD][258/300] loss=2.0225 ce=0.7795 hcl=2.0716 ramp=1.000 train_acc=99.96% val_acc=72.19% best=72.84% lr=2.85358e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 17s elapsed=2h 20m 43s
+[REVIEWKD][259/300] loss=2.0202 ce=0.7792 hcl=2.0683 ramp=1.000 train_acc=99.96% val_acc=72.41% best=72.84% lr=2.72484e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 18s elapsed=2h 21m 16s
+[REVIEWKD][260/300] loss=2.0208 ce=0.7794 hcl=2.0691 ramp=1.000 train_acc=99.97% val_acc=72.25% best=72.84% lr=2.5989e-05 time=33.2s avg_epoch=32.7s est_planned=2h 43m 19s elapsed=2h 21m 50s
+[REVIEWKD][261/300] loss=2.0205 ce=0.7793 hcl=2.0687 ramp=1.000 train_acc=99.96% val_acc=72.22% best=72.84% lr=2.47578e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 20s elapsed=2h 22m 23s
+[REVIEWKD][262/300] loss=2.0197 ce=0.7794 hcl=2.0672 ramp=1.000 train_acc=99.97% val_acc=72.58% best=72.84% lr=2.35549e-05 time=33.3s avg_epoch=32.7s est_planned=2h 43m 20s elapsed=2h 22m 57s
+[REVIEWKD][263/300] loss=2.0178 ce=0.7795 hcl=2.0638 ramp=1.000 train_acc=99.96% val_acc=72.38% best=72.84% lr=2.23806e-05 time=33.1s avg_epoch=32.7s est_planned=2h 43m 21s elapsed=2h 23m 30s
+[REVIEWKD][264/300] loss=2.0178 ce=0.7795 hcl=2.0638 ramp=1.000 train_acc=99.96% val_acc=72.64% best=72.84% lr=2.12349e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 21s elapsed=2h 24m 03s
+[REVIEWKD][265/300] loss=2.0155 ce=0.7793 hcl=2.0604 ramp=1.000 train_acc=99.97% val_acc=72.56% best=72.84% lr=2.01181e-05 time=33.2s avg_epoch=32.7s est_planned=2h 43m 22s elapsed=2h 24m 36s
+[REVIEWKD][266/300] loss=2.0137 ce=0.7791 hcl=2.0576 ramp=1.000 train_acc=99.97% val_acc=72.21% best=72.84% lr=1.90301e-05 time=33.2s avg_epoch=32.7s est_planned=2h 43m 23s elapsed=2h 25m 10s
+[REVIEWKD][267/300] loss=2.0144 ce=0.7791 hcl=2.0589 ramp=1.000 train_acc=99.97% val_acc=72.46% best=72.84% lr=1.79713e-05 time=32.9s avg_epoch=32.7s est_planned=2h 43m 23s elapsed=2h 25m 43s
+[REVIEWKD][268/300] loss=2.0128 ce=0.7791 hcl=2.0563 ramp=1.000 train_acc=99.98% val_acc=72.23% best=72.84% lr=1.69416e-05 time=32.9s avg_epoch=32.7s est_planned=2h 43m 23s elapsed=2h 26m 16s
+[REVIEWKD][269/300] loss=2.0134 ce=0.7794 hcl=2.0568 ramp=1.000 train_acc=99.97% val_acc=72.36% best=72.84% lr=1.59413e-05 time=33.3s avg_epoch=32.7s est_planned=2h 43m 24s elapsed=2h 26m 49s
+[REVIEWKD][270/300] loss=2.0113 ce=0.7793 hcl=2.0534 ramp=1.000 train_acc=99.96% val_acc=72.37% best=72.84% lr=1.49704e-05 time=33.0s avg_epoch=32.7s est_planned=2h 43m 24s elapsed=2h 27m 22s
+[REVIEWKD][271/300] loss=2.0096 ce=0.7792 hcl=2.0507 ramp=1.000 train_acc=99.97% val_acc=72.34% best=72.84% lr=1.40292e-05 time=33.4s avg_epoch=32.7s est_planned=2h 43m 25s elapsed=2h 27m 55s
+[REVIEWKD][272/300] loss=2.0104 ce=0.7792 hcl=2.0519 ramp=1.000 train_acc=99.97% val_acc=72.37% best=72.84% lr=1.31176e-05 time=33.6s avg_epoch=32.7s est_planned=2h 43m 26s elapsed=2h 28m 29s
+[REVIEWKD][273/300] loss=2.0100 ce=0.7795 hcl=2.0509 ramp=1.000 train_acc=99.95% val_acc=72.38% best=72.84% lr=1.22359e-05 time=33.1s avg_epoch=32.7s est_planned=2h 43m 27s elapsed=2h 29m 02s
+[REVIEWKD][274/300] loss=2.0079 ce=0.7793 hcl=2.0477 ramp=1.000 train_acc=99.97% val_acc=72.48% best=72.84% lr=1.13841e-05 time=32.7s avg_epoch=32.7s est_planned=2h 43m 27s elapsed=2h 29m 35s
+[REVIEWKD][275/300] loss=2.0077 ce=0.7791 hcl=2.0478 ramp=1.000 train_acc=99.97% val_acc=72.35% best=72.84% lr=1.05623e-05 time=33.0s avg_epoch=32.7s est_planned=2h 43m 27s elapsed=2h 30m 08s
+[REVIEWKD][276/300] loss=2.0076 ce=0.7792 hcl=2.0474 ramp=1.000 train_acc=99.97% val_acc=72.47% best=72.84% lr=9.77067e-06 time=33.1s avg_epoch=32.7s est_planned=2h 43m 27s elapsed=2h 30m 41s
+[REVIEWKD][277/300] loss=2.0077 ce=0.7792 hcl=2.0476 ramp=1.000 train_acc=99.97% val_acc=72.46% best=72.84% lr=9.00928e-06 time=32.9s avg_epoch=32.7s est_planned=2h 43m 28s elapsed=2h 31m 14s
+[REVIEWKD][278/300] loss=2.0064 ce=0.7792 hcl=2.0454 ramp=1.000 train_acc=99.96% val_acc=72.22% best=72.84% lr=8.27824e-06 time=32.9s avg_epoch=32.7s est_planned=2h 43m 28s elapsed=2h 31m 47s
+[REVIEWKD][279/300] loss=2.0061 ce=0.7792 hcl=2.0448 ramp=1.000 train_acc=99.97% val_acc=72.16% best=72.84% lr=7.57762e-06 time=33.2s avg_epoch=32.7s est_planned=2h 43m 28s elapsed=2h 32m 20s
+[REVIEWKD][280/300] loss=2.0057 ce=0.7790 hcl=2.0444 ramp=1.000 train_acc=99.98% val_acc=72.27% best=72.84% lr=6.90752e-06 time=33.5s avg_epoch=32.7s est_planned=2h 43m 29s elapsed=2h 32m 54s
+[REVIEWKD][281/300] loss=2.0052 ce=0.7792 hcl=2.0434 ramp=1.000 train_acc=99.97% val_acc=72.12% best=72.84% lr=6.26802e-06 time=33.5s avg_epoch=32.7s est_planned=2h 43m 30s elapsed=2h 33m 27s
+[REVIEWKD][282/300] loss=2.0033 ce=0.7792 hcl=2.0401 ramp=1.000 train_acc=99.97% val_acc=72.30% best=72.84% lr=5.65921e-06 time=33.1s avg_epoch=32.7s est_planned=2h 43m 30s elapsed=2h 34m 01s
+[REVIEWKD][283/300] loss=2.0029 ce=0.7790 hcl=2.0398 ramp=1.000 train_acc=99.97% val_acc=72.50% best=72.84% lr=5.08115e-06 time=33.3s avg_epoch=32.7s est_planned=2h 43m 31s elapsed=2h 34m 34s
+[REVIEWKD][284/300] loss=2.0040 ce=0.7792 hcl=2.0413 ramp=1.000 train_acc=99.97% val_acc=72.35% best=72.84% lr=4.53393e-06 time=33.3s avg_epoch=32.7s est_planned=2h 43m 32s elapsed=2h 35m 07s
+[REVIEWKD][285/300] loss=2.0037 ce=0.7792 hcl=2.0409 ramp=1.000 train_acc=99.97% val_acc=72.40% best=72.84% lr=4.0176e-06 time=33.4s avg_epoch=32.7s est_planned=2h 43m 32s elapsed=2h 35m 41s
+[REVIEWKD][286/300] loss=2.0023 ce=0.7791 hcl=2.0387 ramp=1.000 train_acc=99.98% val_acc=72.40% best=72.84% lr=3.53225e-06 time=32.9s avg_epoch=32.7s est_planned=2h 43m 32s elapsed=2h 36m 14s
+[REVIEWKD][287/300] loss=2.0031 ce=0.7791 hcl=2.0401 ramp=1.000 train_acc=99.98% val_acc=72.34% best=72.84% lr=3.07791e-06 time=33.0s avg_epoch=32.7s est_planned=2h 43m 33s elapsed=2h 36m 47s
+[REVIEWKD][288/300] loss=2.0019 ce=0.7790 hcl=2.0382 ramp=1.000 train_acc=99.98% val_acc=72.36% best=72.84% lr=2.65467e-06 time=33.2s avg_epoch=32.7s est_planned=2h 43m 33s elapsed=2h 37m 20s
+[REVIEWKD][289/300] loss=2.0025 ce=0.7790 hcl=2.0392 ramp=1.000 train_acc=99.99% val_acc=72.37% best=72.84% lr=2.26256e-06 time=33.2s avg_epoch=32.7s est_planned=2h 43m 34s elapsed=2h 37m 53s
+[REVIEWKD][290/300] loss=2.0016 ce=0.7790 hcl=2.0376 ramp=1.000 train_acc=99.98% val_acc=72.28% best=72.84% lr=1.90164e-06 time=33.6s avg_epoch=32.7s est_planned=2h 43m 35s elapsed=2h 38m 27s
+[REVIEWKD][291/300] loss=2.0016 ce=0.7791 hcl=2.0375 ramp=1.000 train_acc=99.98% val_acc=72.40% best=72.84% lr=1.57195e-06 time=33.6s avg_epoch=32.7s est_planned=2h 43m 36s elapsed=2h 39m 00s
+[REVIEWKD][292/300] loss=2.0013 ce=0.7791 hcl=2.0370 ramp=1.000 train_acc=99.98% val_acc=72.50% best=72.84% lr=1.27353e-06 time=33.3s avg_epoch=32.7s est_planned=2h 43m 36s elapsed=2h 39m 34s
+[REVIEWKD][293/300] loss=2.0021 ce=0.7790 hcl=2.0384 ramp=1.000 train_acc=99.98% val_acc=72.43% best=72.84% lr=1.00643e-06 time=33.5s avg_epoch=32.7s est_planned=2h 43m 37s elapsed=2h 40m 07s
+[REVIEWKD][294/300] loss=2.0019 ce=0.7790 hcl=2.0382 ramp=1.000 train_acc=99.98% val_acc=72.53% best=72.84% lr=7.70667e-07 time=33.5s avg_epoch=32.7s est_planned=2h 43m 38s elapsed=2h 40m 41s
+[REVIEWKD][295/300] loss=2.0005 ce=0.7790 hcl=2.0358 ramp=1.000 train_acc=99.98% val_acc=72.41% best=72.84% lr=5.66281e-07 time=33.5s avg_epoch=32.7s est_planned=2h 43m 39s elapsed=2h 41m 15s
+[REVIEWKD][296/300] loss=2.0008 ce=0.7790 hcl=2.0363 ramp=1.000 train_acc=99.98% val_acc=72.45% best=72.84% lr=3.93296e-07 time=33.7s avg_epoch=32.7s est_planned=2h 43m 40s elapsed=2h 41m 48s
+[REVIEWKD][297/300] loss=2.0002 ce=0.7790 hcl=2.0353 ramp=1.000 train_acc=99.98% val_acc=72.52% best=72.84% lr=2.51733e-07 time=33.6s avg_epoch=32.7s est_planned=2h 43m 40s elapsed=2h 42m 22s
+[REVIEWKD][298/300] loss=2.0003 ce=0.7789 hcl=2.0356 ramp=1.000 train_acc=99.99% val_acc=72.52% best=72.84% lr=1.4161e-07 time=33.4s avg_epoch=32.7s est_planned=2h 43m 41s elapsed=2h 42m 55s
+[REVIEWKD][299/300] loss=2.0007 ce=0.7791 hcl=2.0361 ramp=1.000 train_acc=99.98% val_acc=72.51% best=72.84% lr=6.29413e-08 time=33.9s avg_epoch=32.7s est_planned=2h 43m 42s elapsed=2h 43m 29s
+[REVIEWKD][300/300] loss=2.0012 ce=0.7790 hcl=2.0369 ramp=1.000 train_acc=99.98% val_acc=72.48% best=72.84% lr=1.57358e-08 time=33.5s avg_epoch=32.7s est_planned=2h 43m 43s elapsed=2h 44m 03s
+========================================================================
+[FINAL_RESULT] reviewkd_best_top1=72.84% vanilla_top1=65.08% gain_over_vanilla=+7.76pp
+[TIMING] avg_epoch=32.7s planned_epochs=300 estimated_total=2h 43m 43s elapsed=2h 44m 03s
+[FINAL_RESULT] best_checkpoint=/app/output/reviewkd_cifar100_deit_ti_300ep/student_best.pt
+[FINAL_RESULT] latest_checkpoint=/app/output/reviewkd_cifar100_deit_ti_300ep/student_latest.pt
+[FINAL_RESULT] summary=/app/output/reviewkd_cifar100_deit_ti_300ep/summary.json
+[DONE] ReviewKD training completed successfully; resources may be released.

@@ -1,0 +1,138 @@
+[BOOT] timm not found; installing timm==1.0.27
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[BOOT] timm installation completed
+========================================================================
+OFFICIAL CRD / RESNET56 -> DEIT-TI
+========================================================================
+[ENV] python=3.10.12 torch=2.11.0+cu130 timm=1.0.27
+[ENV] cuda_available=True cuda_device_count=1
+[ENV] gpu_name=NVIDIA H200 NVL
+[ENV] gpu_memory_gib=139.80
+[ENV] device=cuda amp=True seed=42
+[PATH] data_dir=/app/data/chaoyang
+[PATH] teacher_root=/app/scratch/input/bapedragon_409/checkpoints/teachers
+[PATH] run_dir=/app/output/crd_chaoyang_deit_ti_100ep
+[MODE] smoke=False timing_run=False student_epochs=100 planned_epochs=100
+[PROTOCOL] name=chaoyang_deit_ti_common_kd_v1 optimizer=AdamW lr=0.0005 weight_decay=0.05 warmup=5 cosine batch=64 image=224
+[CRD] loss=CE+0.8*CRD no_logit_KL feat_dim=128 nce_k=16384 nce_t=0.07 nce_m=0.5 mode=exact
+[OFFICIAL] repository=https://github.com/HobbitLong/RepDistiller commit=b84f547c5db6a35318d4671d7d5c4de74c822403
+[ADAPTER] teacher=global-pooled stage3 (64d) student=DeiT CLS pre-logits (192d)
+[DATA] requested_root=/app/data/chaoyang
+[DATA] resolved_root=/app/data/chaoyang/drive-download-20260714T054439Z-1-001
+[DATA] Validating official Chaoyang train/test splits and labels
+[DATA] train_split verified samples=4021 normal=1111 serrated=842 adenocarcinoma=1404 adenoma=664 first_image_size=(512, 512)
+[DATA] test_split verified samples=2139 normal=705 serrated=321 adenocarcinoma=840 adenoma=273 first_image_size=(512, 512)
+[DATA] train_samples=4021 test_samples=2139
+[DATA] image_size=224 batch_size=64 num_workers=4 smoke=False
+[TEACHER] selected=latest epoch=300 top1=81.53% sha256=29a793665abb89b6b48d3ef5e974314ed9f335c80e78d818e4d94cddad06f76b
+[MODEL] teacher_params=855,380 student_params=5,525,188 crd_trainable_params=33,024 n_data=4021
+[STUDENT] optimizer=adamw lr=0.0005 weight_decay=0.05 epochs=100 effective_warmup=5
+[CRD] normalization constant Z_v1=9205.9
+[CRD] normalization constant Z_v2=8970.3
+[CRD][001/100] loss=19.0268 ce=1.3066 crd=22.1503 train_acc=43.27% val_acc=52.27% best=52.27% lr=0.0001 time=10.2s avg_epoch=10.2s est_planned=17m 04s elapsed=10s saved_best
+[CRD][002/100] loss=19.3114 ce=1.2860 crd=22.5317 train_acc=43.17% val_acc=46.98% best=52.27% lr=0.0002 time=8.7s avg_epoch=9.5s est_planned=15m 48s elapsed=19s
+[CRD][003/100] loss=17.4267 ce=1.1905 crd=20.2953 train_acc=52.23% val_acc=63.11% best=63.11% lr=0.0003 time=8.5s avg_epoch=9.2s est_planned=15m 16s elapsed=28s saved_best
+[CRD][004/100] loss=16.3408 ce=1.1138 crd=19.0338 train_acc=57.97% val_acc=64.47% best=64.47% lr=0.0004 time=8.5s avg_epoch=9.0s est_planned=15m 00s elapsed=36s saved_best
+[CRD][005/100] loss=15.5443 ce=1.0649 crd=18.0994 train_acc=60.71% val_acc=61.71% best=64.47% lr=0.0005 time=8.5s avg_epoch=8.9s est_planned=14m 49s elapsed=45s
+[CRD][006/100] loss=15.0548 ce=1.0377 crd=17.5213 train_acc=61.68% val_acc=63.49% best=64.47% lr=0.0005 time=8.4s avg_epoch=8.8s est_planned=14m 41s elapsed=53s
+[CRD][007/100] loss=15.1118 ce=1.1232 crd=17.4856 train_acc=57.03% val_acc=60.45% best=64.47% lr=0.000499863 time=8.2s avg_epoch=8.7s est_planned=14m 33s elapsed=1m 02s
+[CRD][008/100] loss=14.6634 ce=1.0344 crd=17.0362 train_acc=62.30% val_acc=59.70% best=64.47% lr=0.000499453 time=8.3s avg_epoch=8.7s est_planned=14m 27s elapsed=1m 10s
+[CRD][009/100] loss=14.1266 ce=0.9831 crd=16.4294 train_acc=64.26% val_acc=60.73% best=64.47% lr=0.000498771 time=8.2s avg_epoch=8.6s est_planned=14m 22s elapsed=1m 18s
+[CRD][010/100] loss=14.9641 ce=1.1876 crd=17.2207 train_acc=52.82% val_acc=54.37% best=64.47% lr=0.000497816 time=8.3s avg_epoch=8.6s est_planned=14m 18s elapsed=1m 26s
+[CRD][011/100] loss=14.6241 ce=1.0964 crd=16.9096 train_acc=58.14% val_acc=54.98% best=64.47% lr=0.00049659 time=8.4s avg_epoch=8.6s est_planned=14m 17s elapsed=1m 35s
+[CRD][012/100] loss=14.7065 ce=1.0953 crd=17.0141 train_acc=58.24% val_acc=58.58% best=64.47% lr=0.000495095 time=8.3s avg_epoch=8.5s est_planned=14m 14s elapsed=1m 43s
+[CRD][013/100] loss=14.4017 ce=1.0351 crd=16.7083 train_acc=62.40% val_acc=60.40% best=64.47% lr=0.000493332 time=8.3s avg_epoch=8.5s est_planned=14m 13s elapsed=1m 52s
+[CRD][014/100] loss=14.2083 ce=1.0176 crd=16.4884 train_acc=62.47% val_acc=37.96% best=64.47% lr=0.000491302 time=8.3s avg_epoch=8.5s est_planned=14m 11s elapsed=2m 00s
+[CRD][015/100] loss=14.2178 ce=1.0430 crd=16.4685 train_acc=61.08% val_acc=66.43% best=66.43% lr=0.000489009 time=8.2s avg_epoch=8.5s est_planned=14m 09s elapsed=2m 08s saved_best
+[CRD][016/100] loss=13.7907 ce=0.9667 crd=16.0300 train_acc=65.66% val_acc=48.62% best=66.43% lr=0.000486454 time=8.4s avg_epoch=8.5s est_planned=14m 09s elapsed=2m 17s
+[CRD][017/100] loss=14.0339 ce=1.0631 crd=16.2135 train_acc=59.06% val_acc=45.82% best=66.43% lr=0.000483641 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=2m 25s
+[CRD][018/100] loss=13.9171 ce=1.0141 crd=16.1287 train_acc=63.12% val_acc=67.93% best=67.93% lr=0.000480572 time=8.5s avg_epoch=8.5s est_planned=14m 08s elapsed=2m 34s saved_best
+[CRD][019/100] loss=13.9087 ce=1.0201 crd=16.1107 train_acc=62.02% val_acc=64.42% best=67.93% lr=0.000477252 time=8.4s avg_epoch=8.5s est_planned=14m 08s elapsed=2m 42s
+[CRD][020/100] loss=14.9186 ce=1.1594 crd=17.1990 train_acc=53.10% val_acc=46.14% best=67.93% lr=0.000473682 time=8.3s avg_epoch=8.5s est_planned=14m 07s elapsed=2m 51s
+[CRD][021/100] loss=15.0049 ce=1.1875 crd=17.2717 train_acc=53.12% val_acc=60.03% best=67.93% lr=0.000469868 time=8.3s avg_epoch=8.5s est_planned=14m 06s elapsed=2m 59s
+[CRD][022/100] loss=14.3336 ce=1.0627 crd=16.5887 train_acc=60.51% val_acc=59.84% best=67.93% lr=0.000465814 time=8.4s avg_epoch=8.5s est_planned=14m 05s elapsed=3m 07s
+[CRD][023/100] loss=13.9715 ce=1.0000 crd=16.2144 train_acc=64.64% val_acc=62.18% best=67.93% lr=0.000461524 time=8.3s avg_epoch=8.4s est_planned=14m 05s elapsed=3m 16s
+[CRD][024/100] loss=13.7605 ce=0.9669 crd=15.9919 train_acc=66.50% val_acc=68.07% best=68.07% lr=0.000457002 time=8.2s avg_epoch=8.4s est_planned=14m 04s elapsed=3m 24s saved_best
+[CRD][025/100] loss=13.3277 ce=0.9365 crd=15.4890 train_acc=67.30% val_acc=63.21% best=68.07% lr=0.000452254 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=3m 33s
+[CRD][026/100] loss=12.8976 ce=0.9192 crd=14.9730 train_acc=67.84% val_acc=69.61% best=69.61% lr=0.000447285 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=3m 41s saved_best
+[CRD][027/100] loss=12.9980 ce=0.9411 crd=15.0711 train_acc=66.77% val_acc=69.05% best=69.61% lr=0.0004421 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=3m 50s
+[CRD][028/100] loss=13.7488 ce=1.0656 crd=15.8540 train_acc=59.89% val_acc=66.11% best=69.61% lr=0.000436705 time=8.6s avg_epoch=8.4s est_planned=14m 05s elapsed=3m 58s
+[CRD][029/100] loss=13.5340 ce=0.9899 crd=15.6801 train_acc=64.29% val_acc=63.96% best=69.61% lr=0.000431106 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=4m 07s
+[CRD][030/100] loss=13.1312 ce=0.9342 crd=15.2462 train_acc=68.42% val_acc=68.86% best=69.61% lr=0.000425309 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=4m 15s
+[CRD][031/100] loss=13.0936 ce=0.9613 crd=15.1654 train_acc=65.78% val_acc=56.85% best=69.61% lr=0.00041932 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=4m 24s
+[CRD][032/100] loss=13.0776 ce=0.9628 crd=15.1434 train_acc=66.08% val_acc=66.67% best=69.61% lr=0.000413146 time=8.8s avg_epoch=8.5s est_planned=14m 05s elapsed=4m 33s
+[CRD][033/100] loss=13.0938 ce=0.9819 crd=15.1398 train_acc=64.96% val_acc=68.54% best=69.61% lr=0.000406794 time=8.5s avg_epoch=8.5s est_planned=14m 06s elapsed=4m 41s
+[CRD][034/100] loss=12.8836 ce=0.9379 crd=14.9321 train_acc=67.17% val_acc=52.41% best=69.61% lr=0.00040027 time=8.3s avg_epoch=8.5s est_planned=14m 05s elapsed=4m 50s
+[CRD][035/100] loss=12.8702 ce=0.9528 crd=14.8967 train_acc=67.05% val_acc=69.89% best=69.89% lr=0.000393582 time=8.3s avg_epoch=8.4s est_planned=14m 05s elapsed=4m 58s saved_best
+[CRD][036/100] loss=12.5390 ce=0.9105 crd=14.5356 train_acc=69.14% val_acc=72.60% best=72.60% lr=0.000386737 time=8.2s avg_epoch=8.4s est_planned=14m 04s elapsed=5m 06s saved_best
+[CRD][037/100] loss=12.3179 ce=0.8971 crd=14.2760 train_acc=69.63% val_acc=72.56% best=72.60% lr=0.000379742 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=5m 15s
+[CRD][038/100] loss=12.3691 ce=0.9265 crd=14.3033 train_acc=68.19% val_acc=69.89% best=72.60% lr=0.000372606 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=5m 23s
+[CRD][039/100] loss=12.1704 ce=0.8923 crd=14.0976 train_acc=70.26% val_acc=69.38% best=72.60% lr=0.000365335 time=8.3s avg_epoch=8.4s est_planned=14m 03s elapsed=5m 32s
+[CRD][040/100] loss=12.1542 ce=0.8987 crd=14.0694 train_acc=69.61% val_acc=73.31% best=73.31% lr=0.000357939 time=8.2s avg_epoch=8.4s est_planned=14m 03s elapsed=5m 40s saved_best
+[CRD][041/100] loss=12.1004 ce=0.8877 crd=14.0159 train_acc=70.50% val_acc=73.49% best=73.49% lr=0.000350424 time=8.4s avg_epoch=8.4s est_planned=14m 03s elapsed=5m 48s saved_best
+[CRD][042/100] loss=11.9074 ce=0.8571 crd=13.8128 train_acc=72.10% val_acc=68.58% best=73.49% lr=0.000342799 time=8.4s avg_epoch=8.4s est_planned=14m 03s elapsed=5m 57s
+[CRD][043/100] loss=11.9318 ce=0.8878 crd=13.8050 train_acc=70.53% val_acc=73.31% best=73.49% lr=0.000335073 time=9.7s avg_epoch=8.5s est_planned=14m 06s elapsed=6m 07s
+[CRD][044/100] loss=11.6393 ce=0.8625 crd=13.4711 train_acc=71.97% val_acc=69.38% best=73.49% lr=0.000327254 time=9.2s avg_epoch=8.5s est_planned=14m 07s elapsed=6m 16s
+[CRD][045/100] loss=12.4335 ce=0.9705 crd=14.3287 train_acc=65.26% val_acc=68.63% best=73.49% lr=0.000319351 time=9.1s avg_epoch=8.5s est_planned=14m 09s elapsed=6m 25s
+[CRD][046/100] loss=11.9408 ce=0.8725 crd=13.8353 train_acc=71.10% val_acc=69.85% best=73.49% lr=0.000311371 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=6m 34s
+[CRD][047/100] loss=11.5176 ce=0.8487 crd=13.3361 train_acc=72.97% val_acc=72.42% best=73.49% lr=0.000303325 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=6m 42s
+[CRD][048/100] loss=12.4890 ce=1.0016 crd=14.3592 train_acc=64.01% val_acc=68.68% best=73.49% lr=0.00029522 time=8.6s avg_epoch=8.5s est_planned=14m 09s elapsed=6m 51s
+[CRD][049/100] loss=12.2458 ce=0.9032 crd=14.1782 train_acc=70.21% val_acc=62.97% best=73.49% lr=0.000287066 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=6m 59s
+[CRD][050/100] loss=12.3558 ce=0.9461 crd=14.2622 train_acc=66.38% val_acc=68.16% best=73.49% lr=0.000278871 time=8.7s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 08s
+[CRD][051/100] loss=12.1292 ce=0.9037 crd=14.0318 train_acc=69.66% val_acc=69.75% best=73.49% lr=0.000270645 time=8.4s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 17s
+[CRD][052/100] loss=13.1200 ce=1.0431 crd=15.0960 train_acc=62.40% val_acc=63.35% best=73.49% lr=0.000262396 time=8.6s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 25s
+[CRD][053/100] loss=12.5426 ce=0.9342 crd=14.5105 train_acc=67.87% val_acc=70.22% best=73.49% lr=0.000254133 time=8.3s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 34s
+[CRD][054/100] loss=12.0805 ce=0.8695 crd=14.0137 train_acc=71.33% val_acc=72.18% best=73.49% lr=0.000245867 time=8.2s avg_epoch=8.5s est_planned=14m 08s elapsed=7m 42s
+[CRD][055/100] loss=11.7626 ce=0.8594 crd=13.6289 train_acc=72.30% val_acc=72.70% best=73.49% lr=0.000237604 time=8.8s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 51s
+[CRD][056/100] loss=11.6946 ce=0.8618 crd=13.5410 train_acc=72.20% val_acc=72.88% best=73.49% lr=0.000229355 time=8.4s avg_epoch=8.5s est_planned=14m 09s elapsed=7m 59s
+[CRD][057/100] loss=11.4335 ce=0.8358 crd=13.2471 train_acc=73.22% val_acc=70.08% best=73.49% lr=0.000221129 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=8m 08s
+[CRD][058/100] loss=11.2099 ce=0.8404 crd=12.9618 train_acc=73.79% val_acc=73.54% best=73.54% lr=0.000212934 time=8.5s avg_epoch=8.5s est_planned=14m 09s elapsed=8m 16s saved_best
+[CRD][059/100] loss=11.9953 ce=0.9523 crd=13.8038 train_acc=67.32% val_acc=69.57% best=73.54% lr=0.00020478 time=8.3s avg_epoch=8.5s est_planned=14m 08s elapsed=8m 25s
+[CRD][060/100] loss=11.7672 ce=0.8998 crd=13.5844 train_acc=69.76% val_acc=49.18% best=73.54% lr=0.000196675 time=8.2s avg_epoch=8.5s est_planned=14m 08s elapsed=8m 33s
+[CRD][061/100] loss=12.1648 ce=0.9385 crd=14.0328 train_acc=68.61% val_acc=71.81% best=73.54% lr=0.000188629 time=8.4s avg_epoch=8.5s est_planned=14m 08s elapsed=8m 41s
+[CRD][062/100] loss=11.6382 ce=0.8420 crd=13.4953 train_acc=73.14% val_acc=74.38% best=74.38% lr=0.000180649 time=8.3s avg_epoch=8.5s est_planned=14m 08s elapsed=8m 50s saved_best
+[CRD][063/100] loss=11.3944 ce=0.8286 crd=13.2072 train_acc=73.54% val_acc=72.28% best=74.38% lr=0.000172746 time=8.3s avg_epoch=8.5s est_planned=14m 07s elapsed=8m 58s
+[CRD][064/100] loss=11.3655 ce=0.8363 crd=13.1616 train_acc=74.11% val_acc=73.45% best=74.38% lr=0.000164927 time=8.6s avg_epoch=8.5s est_planned=14m 07s elapsed=9m 07s
+[CRD][065/100] loss=11.3668 ce=0.8696 crd=13.1215 train_acc=72.44% val_acc=67.98% best=74.38% lr=0.000157201 time=8.7s avg_epoch=8.5s est_planned=14m 08s elapsed=9m 15s
+[CRD][066/100] loss=11.1650 ce=0.8379 crd=12.9088 train_acc=72.92% val_acc=69.38% best=74.38% lr=0.000149576 time=8.4s avg_epoch=8.5s est_planned=14m 08s elapsed=9m 24s
+[CRD][067/100] loss=11.4082 ce=0.8554 crd=13.1910 train_acc=73.24% val_acc=73.31% best=74.38% lr=0.000142061 time=8.4s avg_epoch=8.5s est_planned=14m 07s elapsed=9m 32s
+[CRD][068/100] loss=11.1675 ce=0.8255 crd=12.9276 train_acc=74.26% val_acc=74.85% best=74.85% lr=0.000134665 time=8.1s avg_epoch=8.5s est_planned=14m 07s elapsed=9m 41s saved_best
+[CRD][069/100] loss=10.9542 ce=0.8080 crd=12.6828 train_acc=74.46% val_acc=74.57% best=74.85% lr=0.000127394 time=8.2s avg_epoch=8.5s est_planned=14m 07s elapsed=9m 49s
+[CRD][070/100] loss=11.2635 ce=0.8379 crd=13.0320 train_acc=73.59% val_acc=75.41% best=75.41% lr=0.000120258 time=8.3s avg_epoch=8.5s est_planned=14m 06s elapsed=9m 57s saved_best
+[CRD][071/100] loss=10.9592 ce=0.8078 crd=12.6892 train_acc=75.30% val_acc=75.27% best=75.41% lr=0.000113263 time=8.4s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 06s
+[CRD][072/100] loss=10.9893 ce=0.8123 crd=12.7213 train_acc=74.73% val_acc=74.61% best=75.41% lr=0.000106418 time=8.5s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 14s
+[CRD][073/100] loss=10.7615 ce=0.7955 crd=12.4575 train_acc=76.05% val_acc=74.85% best=75.41% lr=9.97297e-05 time=8.4s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 23s
+[CRD][074/100] loss=10.7446 ce=0.7988 crd=12.4322 train_acc=75.98% val_acc=72.09% best=75.41% lr=9.32059e-05 time=8.6s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 31s
+[CRD][075/100] loss=10.7417 ce=0.7947 crd=12.4338 train_acc=76.37% val_acc=76.48% best=76.48% lr=8.68536e-05 time=8.3s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 40s saved_best
+[CRD][076/100] loss=10.8976 ce=0.8004 crd=12.6215 train_acc=75.78% val_acc=72.46% best=76.48% lr=8.06796e-05 time=8.3s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 48s
+[CRD][077/100] loss=10.9179 ce=0.8091 crd=12.6360 train_acc=75.11% val_acc=74.10% best=76.48% lr=7.46908e-05 time=8.4s avg_epoch=8.5s est_planned=14m 06s elapsed=10m 57s
+[CRD][078/100] loss=10.7427 ce=0.7861 crd=12.4458 train_acc=76.18% val_acc=74.01% best=76.48% lr=6.88937e-05 time=8.4s avg_epoch=8.5s est_planned=14m 06s elapsed=11m 05s
+[CRD][079/100] loss=10.6454 ce=0.7898 crd=12.3194 train_acc=76.37% val_acc=75.74% best=76.48% lr=6.32946e-05 time=8.1s avg_epoch=8.5s est_planned=14m 05s elapsed=11m 13s
+[CRD][080/100] loss=10.6528 ce=0.7862 crd=12.3332 train_acc=75.95% val_acc=75.08% best=76.48% lr=5.78997e-05 time=8.2s avg_epoch=8.5s est_planned=14m 05s elapsed=11m 21s
+[CRD][081/100] loss=10.5363 ce=0.7769 crd=12.1992 train_acc=77.00% val_acc=75.46% best=76.48% lr=5.27149e-05 time=8.2s avg_epoch=8.4s est_planned=14m 05s elapsed=11m 30s
+[CRD][082/100] loss=10.8756 ce=0.8107 crd=12.5812 train_acc=74.68% val_acc=74.15% best=76.48% lr=4.77458e-05 time=8.3s avg_epoch=8.4s est_planned=14m 05s elapsed=11m 38s
+[CRD][083/100] loss=10.6173 ce=0.7787 crd=12.2983 train_acc=76.60% val_acc=74.99% best=76.48% lr=4.29978e-05 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=11m 46s
+[CRD][084/100] loss=10.5924 ce=0.7891 crd=12.2542 train_acc=75.48% val_acc=74.66% best=76.48% lr=3.84762e-05 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=11m 55s
+[CRD][085/100] loss=10.4529 ce=0.7710 crd=12.1024 train_acc=77.10% val_acc=75.13% best=76.48% lr=3.41859e-05 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 03s
+[CRD][086/100] loss=10.5351 ce=0.7864 crd=12.1858 train_acc=76.20% val_acc=74.75% best=76.48% lr=3.01316e-05 time=8.6s avg_epoch=8.4s est_planned=14m 05s elapsed=12m 12s
+[CRD][087/100] loss=10.6294 ce=0.7880 crd=12.3017 train_acc=76.45% val_acc=74.38% best=76.48% lr=2.63177e-05 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 20s
+[CRD][088/100] loss=10.3273 ce=0.7677 crd=11.9494 train_acc=77.89% val_acc=74.66% best=76.48% lr=2.27484e-05 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 29s
+[CRD][089/100] loss=10.2857 ce=0.7646 crd=11.9014 train_acc=77.82% val_acc=75.69% best=76.48% lr=1.94276e-05 time=8.6s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 37s
+[CRD][090/100] loss=10.1844 ce=0.7648 crd=11.7745 train_acc=77.59% val_acc=74.80% best=76.48% lr=1.63589e-05 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 46s
+[CRD][091/100] loss=10.2279 ce=0.7683 crd=11.8246 train_acc=77.44% val_acc=75.60% best=76.48% lr=1.35457e-05 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=12m 54s
+[CRD][092/100] loss=10.1149 ce=0.7643 crd=11.6883 train_acc=77.52% val_acc=74.89% best=76.48% lr=1.09911e-05 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 03s
+[CRD][093/100] loss=10.2070 ce=0.7674 crd=11.7995 train_acc=77.24% val_acc=75.46% best=76.48% lr=8.69777e-06 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 11s
+[CRD][094/100] loss=10.2522 ce=0.7706 crd=11.8520 train_acc=77.74% val_acc=74.66% best=76.48% lr=6.66835e-06 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 20s
+[CRD][095/100] loss=10.1274 ce=0.7640 crd=11.7043 train_acc=78.09% val_acc=75.32% best=76.48% lr=4.90501e-06 time=8.2s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 28s
+[CRD][096/100] loss=10.1291 ce=0.7609 crd=11.7103 train_acc=78.07% val_acc=75.18% best=76.48% lr=3.40967e-06 time=8.9s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 37s
+[CRD][097/100] loss=10.1145 ce=0.7667 crd=11.6847 train_acc=78.21% val_acc=75.22% best=76.48% lr=2.18398e-06 time=8.4s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 46s
+[CRD][098/100] loss=10.1261 ce=0.7642 crd=11.7024 train_acc=77.74% val_acc=75.36% best=76.48% lr=1.22927e-06 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=13m 54s
+[CRD][099/100] loss=10.0438 ce=0.7625 crd=11.6016 train_acc=77.49% val_acc=75.41% best=76.48% lr=5.46593e-07 time=8.3s avg_epoch=8.4s est_planned=14m 04s elapsed=14m 02s
+[CRD][100/100] loss=10.0021 ce=0.7610 crd=11.5513 train_acc=77.89% val_acc=75.41% best=76.48% lr=1.36686e-07 time=8.5s avg_epoch=8.4s est_planned=14m 04s elapsed=14m 11s
+========================================================================
+[FINAL_RESULT] crd_best_top1=76.48% vanilla_top1=82.00% gain_over_vanilla=-5.52pp
+[TIMING] avg_epoch=8.4s planned_epochs=100 estimated_total=14m 04s elapsed=14m 11s
+[FINAL_RESULT] best_checkpoint=/app/output/crd_chaoyang_deit_ti_100ep/student_best.pt
+[FINAL_RESULT] latest_checkpoint=/app/output/crd_chaoyang_deit_ti_100ep/student_latest.pt
+[FINAL_RESULT] summary=/app/output/crd_chaoyang_deit_ti_100ep/summary.json
+[DONE] CRD training completed successfully; resources may be released.

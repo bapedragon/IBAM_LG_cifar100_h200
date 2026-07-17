@@ -69,3 +69,11 @@ After the timing run:
 ```bash
 python methods/ReviewKD/cifar100/train.py --num-workers 4 --run-name reviewkd_cifar100_deit_ti_300ep --output-dir /app/output
 ```
+
+## Completed results
+
+| Dataset | Best Top-1 | Best epoch | Latest Top-1 | Vanilla | Gain |
+|---|---:|---:|---:|---:|---:|
+| CIFAR-100 | **72.84%** | 236 | 72.48% | 65.08% | +7.76pp |
+
+The complete record is stored under `cifar100/results/deit_ti/`.

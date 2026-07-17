@@ -1,0 +1,24 @@
+{
+  "source_job": "bapedragon_405",
+  "archive": {
+    "filename": "CRD_CIFAR100_DeiT-Ti_300ep_seed42_Top1-67.40.zip",
+    "sha256": "65dfefdd7d37d98cd50b1faae29ed1c575aa469e253a583d481d953094d76482",
+    "tracked_in_git": false
+  },
+  "selected_checkpoint": {
+    "filename_in_archive": "bapedragon_405/crd_cifar100_deit_ti_300ep/student_best.pt",
+    "epoch": 83,
+    "top1": 67.4,
+    "sha256": "7f34f58ff70f5dd941975f362760ce5549638642f23f91c8b9fbd49124a16661",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  },
+  "latest_checkpoint": {
+    "filename_in_archive": "bapedragon_405/crd_cifar100_deit_ti_300ep/student_latest.pt",
+    "epoch": 300,
+    "top1": 63.74,
+    "sha256": "b726033fb0421019c4d846b2c135fc66b3013662d90cbb13cbc635251e71d9b0",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  }
+}

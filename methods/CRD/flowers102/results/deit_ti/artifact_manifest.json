@@ -1,0 +1,24 @@
+{
+  "source_job": "bapedragon_407",
+  "archive": {
+    "filename": "CRD_Flowers102_DeiT-Ti_200ep_seed42_Top1-46.63.zip",
+    "sha256": "eb4ab54bb4bfe612f470c39888aa8f7c6cdc244f8b2a722ba5d1e0cac50101c3",
+    "tracked_in_git": false
+  },
+  "selected_checkpoint": {
+    "filename_in_archive": "bapedragon_407/crd_flowers102_deit_ti_200ep/student_best.pt",
+    "epoch": 101,
+    "top1": 46.62546755570011,
+    "sha256": "c7136094798e4e3c0aba63ff83659e45253980efaed67c707719fef566102474",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  },
+  "latest_checkpoint": {
+    "filename_in_archive": "bapedragon_407/crd_flowers102_deit_ti_200ep/student_latest.pt",
+    "epoch": 200,
+    "top1": 46.056269312083266,
+    "sha256": "10bb77b8cb62d40b7042452341cb67eabe3ec36e59aab832156bb50694d875b3",
+    "torch_load_verified": true,
+    "finite_tensor_check": true
+  }
+}

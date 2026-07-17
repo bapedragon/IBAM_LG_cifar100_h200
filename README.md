@@ -104,6 +104,12 @@ below are retained as exploratory runs.
 | Method | Dataset | Student | Best Top-1 | Vanilla | Gain |
 |---|---|---|---:|---:|---:|
 | KD | CIFAR-100 | DeiT-Ti | **67.00%** | 65.08% | +1.92pp |
+| KD | Flowers-102 | DeiT-Ti | **45.88%** | 50.06% | -4.18pp |
+| KD | Chaoyang | DeiT-Ti | **80.60%** | 82.00% | -1.40pp |
+| CRD | CIFAR-100 | DeiT-Ti | **67.40%** | 65.08% | +2.32pp |
+| CRD | Flowers-102 | DeiT-Ti | **46.63%** | 50.06% | -3.43pp |
+| CRD | Chaoyang | DeiT-Ti | **76.48%** | 82.00% | -5.52pp |
+| ReviewKD | CIFAR-100 | DeiT-Ti | **72.84%** | 65.08% | +7.76pp |
 | KD | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp |
 | KD | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp |
 

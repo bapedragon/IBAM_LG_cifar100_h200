@@ -78,3 +78,13 @@ After timing verification:
 ```bash
 python methods/CRD/cifar100/train.py --num-workers 4 --run-name crd_cifar100_deit_ti_300ep --output-dir /app/output
 ```
+
+## Completed results
+
+| Dataset | Best Top-1 | Best epoch | Latest Top-1 | Vanilla | Gain |
+|---|---:|---:|---:|---:|---:|
+| CIFAR-100 | **67.40%** | 83 | 63.74% | 65.08% | +2.32pp |
+| Flowers-102 | **46.63%** | 101 | 46.06% | 50.06% | -3.43pp |
+| Chaoyang | **76.48%** | 75 | 75.41% | 82.00% | -5.52pp |
+
+Detailed records are stored under `<dataset>/results/deit_ti/`.

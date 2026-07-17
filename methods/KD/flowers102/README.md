@@ -101,3 +101,11 @@ python methods/KD/flowers102/train.py --student deit_ti --num-workers 4 --run-na
 The wrapper injects the selected Flowers defaults. Explicit CLI arguments can
 override them, but any override creates a different protocol and must use a new
 protocol name.
+
+## Completed result
+
+| Student | Best Top-1 | Best epoch | Latest Top-1 | Vanilla | Gain |
+|---|---:|---:|---:|---:|---:|
+| DeiT-Ti | **45.88%** | 50 | 44.53% | 50.06% | -4.18pp |
+
+The complete record is stored under `results/deit_ti/`.

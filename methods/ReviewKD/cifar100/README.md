@@ -22,3 +22,8 @@ Full:
 ```bash
 python methods/ReviewKD/cifar100/train.py --num-workers 4 --run-name reviewkd_cifar100_deit_ti_300ep --output-dir /app/output
 ```
+
+## Completed result
+
+Best Top-1 is **72.84%** at epoch 236; epoch-300 latest Top-1 is 72.48%.
+The complete record is stored under `results/deit_ti/`.
