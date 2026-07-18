@@ -10,8 +10,8 @@ methods/
   KD/                  3/3 primary runs executed; artifacts pending review
   CRD/                 3/3 primary runs executed; artifacts pending review
   ReviewKD/            3/3 primary runs executed; artifacts pending review
-  MGD/                 official-code-based implementation ready for timing
-  OFA/                 planned
+  MGD/                 3/3 primary runs executed; artifacts pending review
+  OFA/                 official-behavior-based implementation ready for timing
 ```
 
 ## Fixed inputs
@@ -56,10 +56,10 @@ be recorded explicitly in each run summary.
 
 Before each new method's first full run, validate one full-data timing run.
 
-Current MGD timing command:
+Current OFA timing command:
 
 ```bash
-python methods/MGD/cifar100/train.py --timing-run --num-workers 4
+python methods/OFA/cifar100/train.py --timing-run --num-workers 4
 ```
 
 ## Required output contract

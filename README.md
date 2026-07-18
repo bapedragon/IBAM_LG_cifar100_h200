@@ -61,6 +61,13 @@ methods/
     cifar100/{train.py,README.md}
     flowers102/{train.py,README.md}
     chaoyang/{train.py,README.md}
+  OFA/
+    README.md
+    official_ofa.py
+    core.py
+    cifar100/{train.py,README.md}
+    flowers102/{train.py,README.md}
+    chaoyang/{train.py,README.md}
 train_teacher_cifar100.py
 train_teacher_flowers.py
 train_teacher_chaoyang.py
@@ -89,6 +96,8 @@ README.md
   CNN-stage-to-ViT-token adapter and dataset-specific wrappers.
 - `methods/MGD/`: official-code-based masked generative loss with the
   documented ResNet-stage-to-DeiT-grid adapter and dataset-specific wrappers.
+- `methods/OFA/`: official-behavior-based adaptive target-enhancement loss and
+  intermediate logit projectors for heterogeneous ResNet56-to-DeiT-Ti KD.
 
 Legacy LG student training, LG checkpoint evaluation, the downloaded LG weight,
 and GitHub-token artifact upload experiments have been removed. H200 artifacts
@@ -117,6 +126,8 @@ method is documented in
 [methods/ReviewKD/README.md](methods/ReviewKD/README.md).
 The next official-code-based comparison is documented in
 [methods/MGD/README.md](methods/MGD/README.md).
+The final heterogeneous comparison is documented in
+[methods/OFA/README.md](methods/OFA/README.md).
 
 Current completed results. Table 2 now uses DeiT-Ti only; the other students
 below are retained as exploratory runs.
@@ -132,6 +143,9 @@ below are retained as exploratory runs.
 | ReviewKD | CIFAR-100 | DeiT-Ti | **72.84%** | 65.08% | +7.76pp |
 | ReviewKD | Flowers-102 | DeiT-Ti | **50.76%** | 50.06% | +0.70pp |
 | ReviewKD | Chaoyang | DeiT-Ti | **81.53%** | 82.00% | -0.47pp |
+| MGD | CIFAR-100 | DeiT-Ti | **73.71%** | 65.08% | +8.63pp |
+| MGD | Flowers-102 | DeiT-Ti | **51.57%** | 50.06% | +1.51pp |
+| MGD | Chaoyang | DeiT-Ti | **81.81%** | 82.00% | -0.19pp |
 | KD | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp |
 | KD | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp |
 
