@@ -58,9 +58,10 @@ Values in parentheses are gains over the corresponding Vanilla DeiT-Ti result.
 | OFA | Full run complete | Full run complete | Full run complete |
 | Ours | Timing pending | Timing pending | Timing pending |
 
-The five generic KD matrices are complete. Ours has passed the paper/source
-audit, local structural forward/backward test, real DeiT/teacher feature-path
-test, adaptive-controller boundary test, and strict checkpoint-reload test.
+The five generic KD matrices are complete. Ours has passed the V3/ALG
+paper/source audit, exact ALG-equation unit tests, teacher-grid and
+source-compatible grid tests, local structural forward/backward test, real
+DeiT/teacher feature-path test, and strict checkpoint-reload test.
 The next step is the CIFAR-100 two-epoch full-data timing run. Its teacher
 runtime audit must pass before any full run, followed by Flowers-102 and
 Chaoyang.

@@ -49,28 +49,26 @@ NUM_STUDENT_BLOCKS = 12
 
 
 class AdaptiveGuidanceController:
-    """Turn feature guidance off after its epoch-level distance plateaus.
+    """Apply the ALG loss-derivative schedule from Eqs. (10)-(19).
 
-    ALG publicly specifies a threshold on the *evolution* of the CNN/ViT
-    feature distance, followed by supervised-only training. Its exact
-    threshold/config is not present in the supplied manuscript or model-only
-    source. This controller therefore records a transparent relative-plateau
-    proxy instead of presenting an invented value as an official ALG setting.
+    ALG smooths the epoch-level LG loss over 50 epochs, differentiates that
+    smoothed loss, smooths the derivative over another 50 epochs, and disables
+    guidance when the final derivative is no longer below tau. Epoch one has
+    no previous loss; its derivative is defined as zero for initialization and
+    is never allowed to stop guidance by itself.
     """
 
     def __init__(self, args: argparse.Namespace) -> None:
         self.schedule = args.beta_schedule
         self.beta_on = float(args.beta_on)
-        self.minimum_epochs = int(args.guidance_min_epochs)
-        self.window = int(args.guidance_window)
-        self.patience = int(args.guidance_patience)
-        self.relative_threshold = float(args.guidance_relative_threshold)
+        self.threshold = float(args.alg_threshold)
+        self.smoothing_window = int(args.alg_smoothing_window)
         self.manual_stop_epoch = args.guidance_stop_epoch
         self.active = True
         self.stop_epoch: int | None = None
-        self.stable_checks = 0
-        self.distance_history: list[float] = []
-        self.relative_change_history: list[float | None] = []
+        self.guidance_loss_history: list[float] = []
+        self.derivative_history: list[float] = []
+        self.smoothed_derivative_history: list[float | None] = []
         self.beta_history: list[float] = []
 
     def beta_for_epoch(self, epoch: int) -> float:
@@ -83,35 +81,43 @@ class AdaptiveGuidanceController:
         self.beta_history.append(beta)
         return beta
 
-    def observe(self, epoch: int, alignment_distance: float) -> dict[str, Any]:
-        self.distance_history.append(float(alignment_distance))
-        relative_change: float | None = None
+    def _current_derivative(self) -> float:
+        epoch = len(self.guidance_loss_history)
+        current = self.guidance_loss_history[-1]
+        if epoch == 1:
+            return 0.0
+        if epoch <= self.smoothing_window:
+            previous_mean = sum(self.guidance_loss_history[:-1]) / (epoch - 1)
+            return (current - previous_mean) / epoch
+        return (
+            current - self.guidance_loss_history[-1 - self.smoothing_window]
+        ) / self.smoothing_window
+
+    def observe(self, epoch: int, guidance_loss: float) -> dict[str, Any]:
+        if epoch != len(self.guidance_loss_history) + 1:
+            raise ValueError(
+                "AdaptiveGuidanceController observations must be consecutive: "
+                f"expected={len(self.guidance_loss_history) + 1} got={epoch}"
+            )
+        self.guidance_loss_history.append(float(guidance_loss))
 
         if self.schedule == "manual_stop":
             assert self.manual_stop_epoch is not None
             if epoch >= self.manual_stop_epoch and self.stop_epoch is None:
                 self.stop_epoch = self.manual_stop_epoch
             self.active = epoch < self.manual_stop_epoch
-            self.relative_change_history.append(None)
+            self.derivative_history.append(0.0)
+            self.smoothed_derivative_history.append(None)
             return self.state_dict()
 
-        if epoch >= self.minimum_epochs and len(self.distance_history) >= 2 * self.window:
-            previous = self.distance_history[-2 * self.window : -self.window]
-            current = self.distance_history[-self.window :]
-            previous_mean = sum(previous) / len(previous)
-            current_mean = sum(current) / len(current)
-            relative_change = abs(current_mean - previous_mean) / max(
-                abs(previous_mean), 1e-12
-            )
-            if relative_change <= self.relative_threshold:
-                self.stable_checks += 1
-            else:
-                self.stable_checks = 0
-            if self.active and self.stable_checks >= self.patience:
-                self.active = False
-                self.stop_epoch = epoch
-
-        self.relative_change_history.append(relative_change)
+        derivative = self._current_derivative()
+        self.derivative_history.append(derivative)
+        window = self.derivative_history[-self.smoothing_window :]
+        smoothed_derivative = sum(window) / len(window)
+        self.smoothed_derivative_history.append(smoothed_derivative)
+        if epoch > 1 and self.active and smoothed_derivative >= self.threshold:
+            self.active = False
+            self.stop_epoch = epoch
         return self.state_dict()
 
     def state_dict(self) -> dict[str, Any]:
@@ -120,14 +126,14 @@ class AdaptiveGuidanceController:
             "beta_on": self.beta_on,
             "active": self.active,
             "stop_epoch": self.stop_epoch,
-            "minimum_epochs": self.minimum_epochs,
-            "window": self.window,
-            "patience": self.patience,
-            "relative_threshold": self.relative_threshold,
+            "threshold": self.threshold,
+            "smoothing_window": self.smoothing_window,
             "manual_stop_epoch": self.manual_stop_epoch,
-            "stable_checks": self.stable_checks,
-            "distance_history": list(self.distance_history),
-            "relative_change_history": list(self.relative_change_history),
+            "guidance_loss_history": list(self.guidance_loss_history),
+            "derivative_history": list(self.derivative_history),
+            "smoothed_derivative_history": list(
+                self.smoothed_derivative_history
+            ),
             "beta_history": list(self.beta_history),
         }
 
@@ -183,30 +189,30 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--beta-schedule",
-        choices=("alg_proxy", "manual_stop"),
-        default="alg_proxy",
+        choices=("alg", "manual_stop"),
+        default="alg",
         help=(
-            "alg_proxy uses a fully recorded relative feature-distance plateau rule; "
-            "manual_stop uses an explicitly supplied stop epoch."
+            "alg implements ALG Eqs. (10)-(19); manual_stop uses an "
+            "explicitly supplied stop epoch."
         ),
     )
     parser.add_argument(
         "--beta-on",
         type=float,
         default=2.5,
-        help="Value of beta(e) while feature guidance is active.",
+        help="ALG beta while feature guidance is active (paper default: 2.5).",
     )
-    parser.add_argument("--guidance-min-epochs", type=int, default=20)
-    parser.add_argument("--guidance-window", type=int, default=5)
-    parser.add_argument("--guidance-patience", type=int, default=3)
-    parser.add_argument("--guidance-relative-threshold", type=float, default=0.01)
     parser.add_argument(
-        "--accept-alg-proxy",
-        action="store_true",
-        help=(
-            "Required for a full alg_proxy run; confirms that its plateau rule is "
-            "a documented reproduction choice rather than the unavailable official ALG config."
-        ),
+        "--alg-threshold",
+        type=float,
+        default=-0.02,
+        help="Tau in ALG Eq. (19) (paper default: -0.02).",
+    )
+    parser.add_argument(
+        "--alg-smoothing-window",
+        type=int,
+        default=50,
+        help="Window used in both ALG smoothing stages (paper default: 50).",
     )
     parser.add_argument(
         "--guidance-stop-epoch",
@@ -221,6 +227,16 @@ def parse_args() -> argparse.Namespace:
         help=(
             "CNN teacher input size before stage extraction. The supplied/public "
             "DeiT-CIFAR source configuration uses 32."
+        ),
+    )
+    parser.add_argument(
+        "--grid-resize-mode",
+        choices=("teacher", "larger"),
+        default="teacher",
+        help=(
+            "teacher follows the V3 manuscript by resizing each projected "
+            "student stage to the CNN stage grid; larger reproduces the "
+            "supplied model snippet's max(student, teacher) grid rule."
         ),
     )
     parser.add_argument(
@@ -279,8 +295,7 @@ def finalize_args(args: argparse.Namespace) -> None:
         "num_heads",
         "deform_kernel_size",
         "beta_on",
-        "guidance_window",
-        "guidance_patience",
+        "alg_smoothing_window",
     ):
         if getattr(args, field) <= 0:
             raise ValueError(f"--{field.replace('_', '-')} must be positive")
@@ -288,10 +303,8 @@ def finalize_args(args: argparse.Namespace) -> None:
         raise ValueError("--num-workers must be non-negative")
     if args.warmup_epochs < 0:
         raise ValueError("--warmup-epochs must be non-negative")
-    if args.guidance_min_epochs < 0:
-        raise ValueError("--guidance-min-epochs must be non-negative")
-    if args.guidance_relative_threshold < 0:
-        raise ValueError("--guidance-relative-threshold must be non-negative")
+    if args.alg_threshold >= 0:
+        raise ValueError("--alg-threshold must be negative for a decreasing loss")
     if args.max_teacher_runtime_gap_pp < 0:
         raise ValueError("--max-teacher-runtime-gap-pp must be non-negative")
     if args.beta_schedule == "manual_stop":
@@ -302,14 +315,6 @@ def finalize_args(args: argparse.Namespace) -> None:
     elif args.guidance_stop_epoch is not None:
         raise ValueError(
             "--guidance-stop-epoch is only valid with --beta-schedule manual_stop"
-        )
-    if (
-        args.beta_schedule == "alg_proxy"
-        and not (args.smoke or args.timing_run or args.accept_alg_proxy)
-    ):
-        raise ValueError(
-            "A full alg_proxy run requires --accept-alg-proxy. The exact official "
-            "ALG threshold/config is not present in the supplied materials."
         )
     if not 0.0 <= args.fusion_ratio <= 1.0:
         raise ValueError("--fusion-ratio must be in [0, 1]")
@@ -682,22 +687,21 @@ def main() -> None:
         f"[OURS] student_blocks=all_12 aggregation=learnable_uniform_init "
         f"teacher_stages=1/2/3 teacher_input={args.teacher_image_size} "
         f"student_grid={args.feature_grid}x{args.feature_grid} "
-        "stage_grid=resize_both_to_larger "
+        f"stage_grid={args.grid_resize_mode} "
         f"projection=1x1 deform_kernel={args.deform_kernel_size} "
         f"qkv_kernel=1 heads={args.num_heads}"
     )
-    if args.beta_schedule == "alg_proxy":
+    if args.beta_schedule == "alg":
         log(
-            "[BETA] schedule=alg_proxy active_then_zero "
-            f"metric=epoch_alignment_distance relative_threshold="
-            f"{args.guidance_relative_threshold} window={args.guidance_window} "
-            f"patience={args.guidance_patience} "
-            f"minimum_epochs={args.guidance_min_epochs}"
+            f"[BETA] schedule=alg_exact beta_on={args.beta_on} "
+            f"metric=L_align threshold={args.alg_threshold} "
+            f"smoothing_window={args.alg_smoothing_window} "
+            "active_condition=smoothed_derivative<threshold"
         )
         log(
-            "[REPRO_STATUS] ALG's exact distance statistic/threshold is absent from "
-            "the supplied manuscript and model-only source. The proxy is explicit "
-            "and fully recorded; it is not labeled as the official ALG controller."
+            "[BETA] ALG Eqs.(10)-(19): smooth the epoch loss over 50 epochs, "
+            "differentiate it, smooth that derivative over 50 epochs, and switch "
+            "permanently to CE-only when the derivative reaches tau=-0.02."
         )
     else:
         log(
@@ -706,13 +710,15 @@ def main() -> None:
         )
     log(f"[SOURCE] provided_snippet_sha256={SOURCE_SNIPPET_SHA256}")
     log(
-        "[REPRO_STATUS] Paper-confirmed: Eq.(4), lambda=0.5, all-block "
-        "aggregation, 1x1 projection/QKV, bilinear grid alignment, 5x5 "
-        "deformable attention, and frozen teacher."
+        "[REPRO_STATUS] Paper-confirmed: Eq.(4), lambda=0.5, ALG beta=2.5, "
+        "tau=-0.02 and 50-epoch smoothing, all-block aggregation, 1x1 "
+        "projection/QKV, teacher-grid bilinear alignment, 5x5 deformable "
+        "attention, and frozen teacher."
     )
     log(
-        "[REPRO_STATUS] Configuration choices: beta_on, ALG proxy thresholds, "
-        "teacher input size, augmentation, label smoothing, seed, and checkpoint policy."
+        "[REPRO_STATUS] Ours-specific reproduction choices: L_align drives the "
+        "ALG controller; epoch-1 derivative is initialized to zero; attention "
+        "heads/reduction/loss reduction follow the supplied source."
     )
 
     train_loader, test_loader = build_loaders(args, device)
@@ -740,6 +746,7 @@ def main() -> None:
         num_student_blocks=NUM_STUDENT_BLOCKS,
         num_heads=args.num_heads,
         spatial_kernel_size=args.deform_kernel_size,
+        grid_resize_mode=args.grid_resize_mode,
     ).to(device)
 
     with torch.no_grad():
@@ -748,13 +755,16 @@ def main() -> None:
         teacher_probe = forward_teacher_features(
             teacher, probe, args.teacher_image_size
         )
-        target_spatial_sizes = [
-            (
-                max(feature.shape[-2], args.feature_grid),
-                max(feature.shape[-1], args.feature_grid),
-            )
-            for feature in teacher_probe
-        ]
+        if args.grid_resize_mode == "teacher":
+            target_spatial_sizes = [feature.shape[-2:] for feature in teacher_probe]
+        else:
+            target_spatial_sizes = [
+                (
+                    max(feature.shape[-2], args.feature_grid),
+                    max(feature.shape[-1], args.feature_grid),
+                )
+                for feature in teacher_probe
+            ]
         if max(height * width for height, width in target_spatial_sizes) > 4096:
             raise RuntimeError(
                 "Ours grid-space attention target is too large for a safe run: "
@@ -883,16 +893,38 @@ def main() -> None:
             amp_enabled,
             beta,
         )
-        controller_state = controller.observe(epoch, alignment_loss)
-        relative_change = controller_state["relative_change_history"][-1]
-        relative_text = (
-            "n/a" if relative_change is None else f"{float(relative_change):.6f}"
+        controller_state = (
+            controller.observe(epoch, alignment_loss)
+            if beta > 0.0
+            else controller.state_dict()
+        )
+        raw_derivative = (
+            controller_state["derivative_history"][-1]
+            if beta > 0.0
+            else None
+        )
+        smoothed_derivative = (
+            controller_state["smoothed_derivative_history"][-1]
+            if beta > 0.0
+            else None
+        )
+        raw_derivative_text = (
+            "n/a"
+            if raw_derivative is None or args.beta_schedule == "manual_stop"
+            else f"{float(raw_derivative):.6f}"
+        )
+        smoothed_derivative_text = (
+            "n/a"
+            if smoothed_derivative is None
+            else f"{float(smoothed_derivative):.6f}"
         )
         if beta > 0.0 and not controller.active:
             log(
                 f"[BETA_TRANSITION] guidance disabled after epoch={epoch} "
-                f"alignment_distance={alignment_loss:.6f} "
-                f"relative_change={relative_text}; subsequent epochs are CE-only."
+                f"L_align={alignment_loss:.6f} "
+                f"raw_derivative={raw_derivative_text} "
+                f"smoothed_derivative={smoothed_derivative_text} "
+                f"threshold={args.alg_threshold}; subsequent epochs are CE-only."
             )
         latest_accuracy = evaluate(student, test_loader, device, amp_enabled)
         epoch_seconds = time.time() - epoch_start
@@ -935,7 +967,8 @@ def main() -> None:
             f"ce={ce:.4f} align={alignment_loss:.4f} "
             f"fuse={fusion_loss:.4f} feature={feature_loss:.4f} "
             f"beta={beta:.4f} guidance_active_next={controller.active} "
-            f"distance_relative_change={relative_text} "
+            f"alg_raw_derivative={raw_derivative_text} "
+            f"alg_smoothed_derivative={smoothed_derivative_text} "
             f"guidance_stop_epoch={controller.stop_epoch} "
             f"train_acc={train_accuracy:.2f}% val_acc={latest_accuracy:.2f}% "
             f"best={best_accuracy:.2f}% lr={epoch_lr:.6g} "

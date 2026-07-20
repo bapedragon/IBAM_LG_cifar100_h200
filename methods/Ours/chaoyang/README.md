@@ -7,8 +7,8 @@
   weight decay `0.05`, 5-epoch warm-up, cosine decay
 - Input/recorded choices: 224 pixels, label smoothing `0.1`, seed `42`
 - Loss: `CE + beta(e) * (0.5 * L_fuse + 0.5 * L_align)`
-- Default beta reproduction: `beta_on=2.5`, then zero after the fully logged
-  relative feature-distance plateau proxy
+- Adaptive beta: exact ALG equations with `beta=2.5`, `tau=-0.02`, two
+  50-epoch smoothing stages; `L_align` is the recorded controller signal
 - Working-paper comparison target: `86.35%` Top-1
 
 No supplied Chaoyang-specific Ours teacher-size config is available. The
@@ -25,7 +25,7 @@ python methods/Ours/chaoyang/train.py --timing-run --num-workers 4
 Full run only after the timing log and teacher audit pass:
 
 ```bash
-python methods/Ours/chaoyang/train.py --student-epochs 100 --accept-alg-proxy --num-workers 4 --run-name ours_chaoyang_deit_ti_100ep --output-dir /app/output
+python methods/Ours/chaoyang/train.py --student-epochs 100 --num-workers 4 --run-name ours_chaoyang_deit_ti_100ep --output-dir /app/output
 ```
 
 Raw measured accuracy is retained; no teacher-gap correction is applied by

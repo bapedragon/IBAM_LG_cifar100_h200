@@ -8,8 +8,8 @@
 - Ours: all 12 student blocks, ResNet stages 1/2/3, learned stage mixtures,
   `1x1` projection/QKV, `5x5` deformable attention, four heads
 - Loss: `CE + beta(e) * (0.5 * L_fuse + 0.5 * L_align)`
-- Default beta reproduction: `beta_on=2.5`, then zero after the fully logged
-  relative feature-distance plateau proxy
+- Adaptive beta: exact ALG equations with `beta=2.5`, `tau=-0.02`, two
+  50-epoch smoothing stages; `L_align` is the recorded controller signal
 - Working-paper comparison target: `82.42%` Top-1
 
 The public DeiT-CIFAR source config uses a 32-pixel teacher input, so the code
@@ -26,8 +26,9 @@ python methods/Ours/cifar100/train.py --timing-run --num-workers 4
 Full run only after the timing log and teacher audit pass:
 
 ```bash
-python methods/Ours/cifar100/train.py --student-epochs 300 --accept-alg-proxy --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
+python methods/Ours/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
 ```
 
-The adaptive proxy is a documented reproduction choice, not an exact official
-ALG config. See [`../PAPER_AUDIT.md`](../PAPER_AUDIT.md).
+The ALG equations/values are paper-confirmed; selecting `L_align` as the
+controller signal and the epoch-1 initialization are documented reproduction
+choices. See [`../PAPER_AUDIT.md`](../PAPER_AUDIT.md).

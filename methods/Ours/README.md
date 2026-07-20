@@ -21,9 +21,8 @@ L_total(e) = CE + beta(e) * [0.5 * L_fuse + 0.5 * L_align]
   skipped and training continues with CE only
 
 The previous extra fixed multiplication
-`CE + 1.0 * 2.5 * (...)` has been removed. `beta_on=2.5` is now represented
-once, as `beta(e)`, and its provenance is recorded as a source-compatible
-configuration choice rather than a value stated in the working paper.
+`CE + 1.0 * 2.5 * (...)` has been removed. `beta=2.5` is represented once as
+`beta(e)`, following the ALG paper cited by V3.
 
 ## Feature path matched to the supplied Ours module
 
@@ -31,31 +30,33 @@ configuration choice rather than a value stated in the working paper.
 - patch-grid outputs from all 12 DeiT-Ti blocks
 - one learned convex 12-block mixture per CNN stage
 - stage-specific `1 x 1` channel projection
-- bilinear resizing of both features to the larger stage grid, as in the
-  supplied source
+- bilinear resizing of each projected student stage to its teacher-stage
+  resolution, as written in V3
 - channel attention and `5 x 5` deformable spatial attention
 - four-head convolutional cross-attention with `1 x 1` Q/K/V
 - teacher and Ours module discarded at inference
 
-## Adaptive beta reproduction boundary
+The supplied model snippet instead resizes both tensors to the larger of the
+student/teacher grids. Because V3 explicitly says "teacher resolution", the
+paper-aligned `teacher` mode is the default. The snippet-compatible behavior
+is retained only as the explicit option `--grid-resize-mode larger` and must
+not be mixed into the main comparison silently.
 
-The working paper says `beta(e)` follows ALG, and the ALG paper publicly
-describes guidance being disabled after the evolution of the CNN/ViT feature
-distance crosses a threshold. Neither the supplied manuscript, the supplied
-model-only Ours file, nor a public official config exposes the exact distance
-statistic, threshold, window, or patience.
+## Adaptive beta from ALG
 
-Two explicit modes are therefore provided:
+The default controller now implements ALG Eqs. (10)-(19), not a plateau
+proxy. It uses `beta=2.5`, `tau=-0.02`, and a 50-epoch window in both
+smoothing steps. Guidance remains active while the twice-smoothed loss
+derivative is below `tau`; when it reaches `tau`, that epoch is the last
+guided epoch and all subsequent epochs use CE only.
 
-- `alg_proxy` (default): records epoch alignment distance and disables
-  guidance after a relative-plateau rule. This is a transparent reproduction
-  choice, **not** labeled as the official ALG controller.
-- `manual_stop`: uses a known last-guided epoch supplied with
-  `--guidance-stop-epoch` if the exact experiment config is later recovered.
-
-A full `alg_proxy` run requires `--accept-alg-proxy`; timing/smoke checks do
-not. Every checkpoint and `summary.json` stores the controller configuration,
-distance history, beta history, and detected stop epoch.
+V3 does not state which of its two feature losses should be observed by the
+ALG controller. This implementation observes `L_align`, because it is the
+direct CNN/ViT feature distance corresponding most closely to ALG's `L_LG`.
+At epoch 1, where ALG's published expression has no previous loss, the raw
+derivative is initialized to zero and cannot stop guidance. These two boundary
+decisions are explicitly saved in logs/checkpoints. `manual_stop` remains
+available only for controlled diagnostics.
 
 ## Dataset-specific base protocols
 
@@ -104,12 +105,12 @@ python methods/Ours/chaoyang/train.py --timing-run --num-workers 4
 Conditional full runs after the timing log and teacher audit are accepted:
 
 ```bash
-python methods/Ours/cifar100/train.py --student-epochs 300 --accept-alg-proxy --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
-python methods/Ours/flowers102/train.py --student-epochs 200 --accept-alg-proxy --num-workers 4 --run-name ours_flowers102_deit_ti_200ep --output-dir /app/output
-python methods/Ours/chaoyang/train.py --student-epochs 100 --accept-alg-proxy --num-workers 4 --run-name ours_chaoyang_deit_ti_100ep --output-dir /app/output
+python methods/Ours/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
+python methods/Ours/flowers102/train.py --student-epochs 200 --num-workers 4 --run-name ours_flowers102_deit_ti_200ep --output-dir /app/output
+python methods/Ours/chaoyang/train.py --student-epochs 100 --num-workers 4 --run-name ours_chaoyang_deit_ti_100ep --output-dir /app/output
 ```
 
-For an exact recovered stop epoch, replace `--accept-alg-proxy` with:
+For a manual diagnostic stop epoch, use:
 
 ```text
 --beta-schedule manual_stop --guidance-stop-epoch <LAST_GUIDED_EPOCH>

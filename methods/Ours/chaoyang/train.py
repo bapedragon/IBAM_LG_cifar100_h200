@@ -25,12 +25,11 @@ PROTOCOL_DEFAULTS = (
     ("--label-smoothing", "0.1"),
     ("--drop-path-rate", "0.0"),
     ("--teacher-image-size", "32"),
-    ("--beta-schedule", "alg_proxy"),
+    ("--beta-schedule", "alg"),
     ("--beta-on", "2.5"),
-    ("--guidance-min-epochs", "5"),
-    ("--guidance-window", "5"),
-    ("--guidance-patience", "3"),
-    ("--guidance-relative-threshold", "0.01"),
+    ("--alg-threshold", "-0.02"),
+    ("--alg-smoothing-window", "50"),
+    ("--grid-resize-mode", "teacher"),
 )
 
 

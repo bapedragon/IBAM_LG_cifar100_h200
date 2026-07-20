@@ -178,7 +178,7 @@ python methods/Ours/cifar100/train.py --timing-run --num-workers 4
 First 300-epoch Ours run after timing verification:
 
 ```bash
-python methods/Ours/cifar100/train.py --student-epochs 300 --accept-alg-proxy --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
+python methods/Ours/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
 ```
 
 Do not start the full run unless the timing log's
