@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run IBAM (Ours) on Chaoyang."""
+"""Run Ours on Chaoyang."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from methods.IBAM.core import cli_main
+from methods.Ours.core import cli_main
 
 
 PROTOCOL_DEFAULTS = (

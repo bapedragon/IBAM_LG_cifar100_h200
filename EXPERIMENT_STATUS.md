@@ -56,9 +56,9 @@ Values in parentheses are gains over the corresponding Vanilla DeiT-Ti result.
 | ReviewKD | Full run complete | Full run complete | Full run complete |
 | MGD | Full run complete | Full run complete | Full run complete |
 | OFA | Full run complete | Full run complete | Full run complete |
-| IBAM (Ours) | Timing pending | Timing pending | Timing pending |
+| Ours | Timing pending | Timing pending | Timing pending |
 
-The five generic KD matrices are complete. IBAM (Ours) has passed local
+The five generic KD matrices are complete. Ours has passed local
 structural, backward, and checkpoint-reload checks; the next step is the
 CIFAR-100 two-epoch full-data timing run, followed by Flowers-102 and Chaoyang.
 

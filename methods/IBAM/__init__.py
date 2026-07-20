@@ -1,1 +1,0 @@
-"""IBAM (Ours) training implementation."""

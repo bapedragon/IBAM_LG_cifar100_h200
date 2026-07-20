@@ -1,4 +1,4 @@
-"""Grid-preserving IBAM modules adapted from the provided Ours source."""
+"""Grid-preserving Ours modules adapted from the provided Ours source."""
 
 from __future__ import annotations
 
@@ -218,7 +218,7 @@ class TransformerAggregationPooling(nn.Module):
         return torch.softmax(self.weights.detach(), dim=-1)
 
 
-class IBAM(nn.Module):
+class Ours(nn.Module):
     """Alignment, deformable enhancement, and grid-space cross-attention."""
 
     def __init__(

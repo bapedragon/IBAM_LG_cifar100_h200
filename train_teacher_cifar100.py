@@ -247,7 +247,7 @@ def download_cifar100_archive(url: str, destination: Path, source_name: str) -> 
     request = urllib.request.Request(
         url,
         headers={
-            "User-Agent": "Mozilla/5.0 (compatible; IBAM-H200-CIFAR100/1.0)",
+            "User-Agent": "Mozilla/5.0 (compatible; Ours-H200-CIFAR100/1.0)",
             "Accept-Encoding": "identity",
         },
     )

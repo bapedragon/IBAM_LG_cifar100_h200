@@ -211,7 +211,7 @@ def download_file(url: str, destination: Path, expected_md5: str, source_name: s
     request = urllib.request.Request(
         url,
         headers={
-            "User-Agent": "Mozilla/5.0 (compatible; IBAM-H200-Flowers/1.0)",
+            "User-Agent": "Mozilla/5.0 (compatible; Ours-H200-Flowers/1.0)",
             "Accept-Encoding": "identity",
         },
     )

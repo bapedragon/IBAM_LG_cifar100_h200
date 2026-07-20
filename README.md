@@ -1,7 +1,7 @@
-# IBAM teacher checkpoints and KD preparation on H200
+# Ours teacher checkpoints and KD preparation on H200
 
 This repository contains the reusable ResNet56 teacher-training workflow, the
-three fixed teacher checkpoints, and the shared preparation files for the IBAM
+three fixed teacher checkpoints, and the shared preparation files for the Ours
 KD experiments on the KAU H200 runner.
 
 Repository:
@@ -68,9 +68,9 @@ methods/
     cifar100/{train.py,README.md}
     flowers102/{train.py,README.md}
     chaoyang/{train.py,README.md}
-  IBAM/
+  Ours/
     README.md
-    ibam.py
+    ours.py
     core.py
     cifar100/{train.py,README.md}
     flowers102/{train.py,README.md}
@@ -105,7 +105,7 @@ README.md
   documented ResNet-stage-to-DeiT-grid adapter and dataset-specific wrappers.
 - `methods/OFA/`: official-behavior-based adaptive target-enhancement loss and
   intermediate logit projectors for heterogeneous ResNet56-to-DeiT-Ti KD.
-- `methods/IBAM/`: the provided Ours feature-distillation source adapted to the
+- `methods/Ours/`: the provided Ours feature-distillation source adapted to the
   fixed ResNet56 teachers and all 12 DeiT-Ti patch-token grids. The source hash,
   feature mapping, executable loss, and missing external beta controller are
   documented explicitly.
@@ -140,7 +140,7 @@ The next official-code-based comparison is documented in
 The final heterogeneous comparison is documented in
 [methods/OFA/README.md](methods/OFA/README.md).
 The Ours implementation and its three dataset wrappers are documented in
-[methods/IBAM/README.md](methods/IBAM/README.md).
+[methods/Ours/README.md](methods/Ours/README.md).
 
 Current completed results. Table 2 now uses DeiT-Ti only; the other students
 below are retained as exploratory runs.
@@ -168,16 +168,16 @@ The consolidated teacher, full-run, timing-run, and progress tables are kept in
 | KD | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp |
 | KD | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp |
 
-Next full-data timing run (IBAM/Ours):
+Next full-data timing run (Ours):
 
 ```bash
-python methods/IBAM/cifar100/train.py --timing-run --num-workers 4
+python methods/Ours/cifar100/train.py --timing-run --num-workers 4
 ```
 
-First 300-epoch IBAM run after timing verification:
+First 300-epoch Ours run after timing verification:
 
 ```bash
-python methods/IBAM/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ibam_cifar100_deit_ti_300ep --output-dir /app/output
+python methods/Ours/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
 ```
 
 ## Environment

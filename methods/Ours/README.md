@@ -1,4 +1,4 @@
-# IBAM (Ours): grid-preserving CNN-to-ViT distillation
+# Ours: grid-preserving CNN-to-ViT distillation
 
 This folder integrates the provided Ours source with the repository's fixed
 ResNet56 teachers and a timm DeiT-Ti student. The original snippet depends on
@@ -20,7 +20,7 @@ already used by the H200 experiments.
 - Enhancement: channel attention plus deformable spatial attention with a
   `5 x 5` kernel
 - Fusion: four-head grid-space cross-attention with convolutional Q/K/V
-- Evaluation: student classification head only; IBAM is a training-time module
+- Evaluation: student classification head only; Ours is a training-time module
 
 The original snippet returns an intermediate feature loss but does not contain
 the outer training loop or the adaptive guidance controller mentioned in the
@@ -40,7 +40,7 @@ values without changing the implementation. Logit KD is not added.
 ## Fixed dataset protocols
 
 The base student protocol is identical to the one already used for KD, CRD,
-ReviewKD, MGD, and OFA within each dataset. Only the IBAM-specific loss differs.
+ReviewKD, MGD, and OFA within each dataset. Only the Ours-specific loss differs.
 
 | Dataset | Epochs | Batch | Optimizer | LR | Weight decay | Warm-up | Schedule |
 |---|---:|---:|---|---:|---:|---:|---|
@@ -60,24 +60,24 @@ Top-1 reporting.
 - Alignment and fused feature shapes: passed
 - CPU forward and backward through deformable attention: passed
 - One complete synthetic student optimization step: passed
-- Student and IBAM strict checkpoint reload: passed
+- Student and Ours strict checkpoint reload: passed
 
 ## Recommended execution order
 
 Run the two-epoch full-data timing check for each dataset before its full run:
 
 ```bash
-python methods/IBAM/cifar100/train.py --timing-run --num-workers 4
-python methods/IBAM/flowers102/train.py --timing-run --num-workers 4
-python methods/IBAM/chaoyang/train.py --timing-run --num-workers 4
+python methods/Ours/cifar100/train.py --timing-run --num-workers 4
+python methods/Ours/flowers102/train.py --timing-run --num-workers 4
+python methods/Ours/chaoyang/train.py --timing-run --num-workers 4
 ```
 
 Full runs must use `/app/output` so the H200 runner retains the artifacts:
 
 ```bash
-python methods/IBAM/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ibam_cifar100_deit_ti_300ep --output-dir /app/output
-python methods/IBAM/flowers102/train.py --student-epochs 200 --num-workers 4 --run-name ibam_flowers102_deit_ti_200ep --output-dir /app/output
-python methods/IBAM/chaoyang/train.py --student-epochs 100 --num-workers 4 --run-name ibam_chaoyang_deit_ti_100ep --output-dir /app/output
+python methods/Ours/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ours_cifar100_deit_ti_300ep --output-dir /app/output
+python methods/Ours/flowers102/train.py --student-epochs 200 --num-workers 4 --run-name ours_flowers102_deit_ti_200ep --output-dir /app/output
+python methods/Ours/chaoyang/train.py --student-epochs 100 --num-workers 4 --run-name ours_chaoyang_deit_ti_100ep --output-dir /app/output
 ```
 
 Every epoch prints total, CE, alignment, fusion, and combined feature losses;

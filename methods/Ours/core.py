@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train DeiT-Ti with the provided grid-preserving IBAM (Ours) module."""
+"""Train DeiT-Ti with the provided grid-preserving Ours module."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from methods.IBAM.ibam import IBAM
+from methods.Ours.ours import Ours
 from methods.KD.core import (
     NUM_CLASSES,
     STUDENT_MODELS,
@@ -56,7 +56,7 @@ def install_signal_handlers() -> None:
         log(f"[FATAL][SIGNAL] Received {signal_name}; external termination requested.")
         if frame is not None:
             traceback.print_stack(frame)
-        log("[FATAL] IBAM training was interrupted before normal completion.")
+        log("[FATAL] Ours training was interrupted before normal completion.")
         raise SystemExit(128 + signum)
 
     for signum in (signal.SIGINT, signal.SIGTERM):
@@ -130,7 +130,7 @@ def finalize_args(args: argparse.Namespace) -> None:
             if args.timing_run
             else ("smoke" if args.smoke else f"{args.student_epochs}ep")
         )
-        args.run_name = f"ibam_{args.dataset}_{args.student}_{suffix}"
+        args.run_name = f"ours_{args.dataset}_{args.student}_{suffix}"
 
     for field in (
         "student_epochs",
@@ -200,7 +200,7 @@ def forward_student_features(
 def train_one_epoch(
     student: torch.nn.Module,
     teacher: torch.nn.Module,
-    ibam: IBAM,
+    ours: Ours,
     loader: Any,
     optimizer: torch.optim.Optimizer,
     scaler: Any,
@@ -210,7 +210,7 @@ def train_one_epoch(
 ) -> tuple[float, float, float, float, float, float]:
     student.train()
     teacher.eval()
-    ibam.train()
+    ours.train()
     total_loss = 0.0
     total_ce = 0.0
     total_alignment = 0.0
@@ -236,7 +236,7 @@ def train_one_epoch(
                 targets,
                 label_smoothing=args.label_smoothing,
             )
-            alignment_loss, fusion_loss, _, _ = ibam(
+            alignment_loss, fusion_loss, _, _ = ours(
                 student_features,
                 teacher_features,
             )
@@ -277,7 +277,7 @@ def train_one_epoch(
 
 def checkpoint_payload(
     student: torch.nn.Module,
-    ibam: IBAM,
+    ours: Ours,
     epoch: int,
     accuracy: float,
     best_accuracy: float,
@@ -286,11 +286,11 @@ def checkpoint_payload(
 ) -> dict[str, Any]:
     return {
         "model": student.state_dict(),
-        "ibam": ibam.state_dict(),
+        "ours": ours.state_dict(),
         "epoch": epoch,
         "accuracy": accuracy,
         "best_accuracy": best_accuracy,
-        "method": "IBAM (Ours)",
+        "method": "Ours",
         "student": args.student,
         "timm_model": STUDENT_MODELS[args.student],
         "dataset": args.dataset,
@@ -316,7 +316,7 @@ def write_summary(
     average_epoch = sum(epoch_times) / max(1, len(epoch_times))
     summary = {
         "status": "complete" if latest_epoch == args.student_epochs else "running",
-        "method": "IBAM (Ours)",
+        "method": "Ours",
         "dataset": args.dataset,
         "student": args.student,
         "timm_model": STUDENT_MODELS[args.student],
@@ -347,12 +347,12 @@ def write_summary(
     temporary.replace(path)
 
 
-def aggregation_weights_list(ibam: IBAM) -> list[list[float]]:
-    return ibam.aggregation.normalized_weights().cpu().tolist()
+def aggregation_weights_list(ours: Ours) -> list[list[float]]:
+    return ours.aggregation.normalized_weights().cpu().tolist()
 
 
-def top_aggregation_weights(ibam: IBAM) -> str:
-    weights = ibam.aggregation.normalized_weights().cpu()
+def top_aggregation_weights(ours: Ours) -> str:
+    weights = ours.aggregation.normalized_weights().cpu()
     stage_summaries = []
     for stage, stage_weights in enumerate(weights, 1):
         values, indices = torch.topk(stage_weights, k=3)
@@ -380,7 +380,7 @@ def main() -> None:
     summary_path = run_dir / "summary.json"
 
     log("=" * 72)
-    log("IBAM (OURS) / RESNET56 -> DEIT-TI")
+    log("OURS / RESNET56 -> DEIT-TI")
     log("=" * 72)
     log(
         f"[ENV] python={platform.python_version()} torch={torch.__version__} "
@@ -408,12 +408,12 @@ def main() -> None:
         f"cosine batch={args.batch_size} image={args.image_size}"
     )
     log(
-        f"[IBAM] loss=CE+beta*weight*(lambda*L_fuse+(1-lambda)*L_align) "
+        f"[OURS] loss=CE+beta*weight*(lambda*L_fuse+(1-lambda)*L_align) "
         f"beta={args.beta} weight={args.distill_weight} "
         f"lambda={args.fusion_ratio}"
     )
     log(
-        f"[IBAM] student_blocks=all_12 aggregation=learnable_uniform_init "
+        f"[OURS] student_blocks=all_12 aggregation=learnable_uniform_init "
         f"teacher_stages=1/2/3 grid={args.feature_grid}x{args.feature_grid} "
         f"projection=1x1 deform_kernel={args.deform_kernel_size} "
         f"qkv_kernel=1 heads={args.num_heads}"
@@ -431,7 +431,7 @@ def main() -> None:
         checkpoint_root=args.teacher_root,
     )
     student = create_student(timm, args.student, NUM_CLASSES[args.dataset]).to(device)
-    ibam = IBAM(
+    ours = Ours(
         student_channels=STUDENT_CHANNELS,
         teacher_channels=TEACHER_CHANNELS,
         num_student_blocks=NUM_STUDENT_BLOCKS,
@@ -443,7 +443,7 @@ def main() -> None:
         probe = torch.zeros(2, 3, args.image_size, args.image_size, device=device)
         teacher_probe = forward_teacher_features(teacher, probe, args.feature_grid)
         student_probe, logits_probe = forward_student_features(student, probe)
-        alignment_probe, fusion_probe, aligned_probe, fused_probe = ibam(
+        alignment_probe, fusion_probe, aligned_probe, fused_probe = ours(
             student_probe,
             teacher_probe,
         )
@@ -473,7 +473,7 @@ def main() -> None:
     if tuple(logits_probe.shape) != (2, NUM_CLASSES[args.dataset]):
         raise RuntimeError(f"Unexpected logits: {tuple(logits_probe.shape)}")
     if not bool(torch.isfinite(alignment_probe + fusion_probe)):
-        raise RuntimeError("Non-finite IBAM probe loss")
+        raise RuntimeError("Non-finite Ours probe loss")
 
     log(
         f"[TEACHER] selected={teacher_spec['selected_kind']} "
@@ -485,7 +485,7 @@ def main() -> None:
         f"[MODEL] teacher_params={count_parameters(teacher):,} "
         f"student={STUDENT_MODELS[args.student]} "
         f"student_params={count_parameters(student):,} "
-        f"ibam_trainable_params={count_parameters(ibam):,}"
+        f"ours_trainable_params={count_parameters(ours):,}"
     )
     log(
         f"[FEATURE_CHECK] teacher={expected_teacher} "
@@ -494,10 +494,10 @@ def main() -> None:
         f"probe_align={float(alignment_probe):.4f} "
         f"probe_fuse={float(fusion_probe):.4f}"
     )
-    log(f"[AGGREGATION_INIT] {top_aggregation_weights(ibam)}")
+    log(f"[AGGREGATION_INIT] {top_aggregation_weights(ours)}")
 
     optimizer = torch.optim.AdamW(
-        list(student.parameters()) + list(ibam.parameters()),
+        list(student.parameters()) + list(ours.parameters()),
         lr=args.lr,
         weight_decay=args.weight_decay,
     )
@@ -531,7 +531,7 @@ def main() -> None:
         ) = train_one_epoch(
             student,
             teacher,
-            ibam,
+            ours,
             train_loader,
             optimizer,
             scaler,
@@ -546,7 +546,7 @@ def main() -> None:
         best_accuracy = max(best_accuracy, latest_accuracy)
         payload = checkpoint_payload(
             student,
-            ibam,
+            ours,
             epoch,
             latest_accuracy,
             best_accuracy,
@@ -568,12 +568,12 @@ def main() -> None:
             latest_accuracy=latest_accuracy,
             epoch_times=epoch_times,
             elapsed_seconds=elapsed,
-            aggregation_weights=aggregation_weights_list(ibam),
+            aggregation_weights=aggregation_weights_list(ours),
         )
         average_epoch = sum(epoch_times) / len(epoch_times)
         suffix = " saved_best" if saved_best else ""
         log(
-            f"[IBAM][{epoch:03d}/{args.student_epochs:03d}] loss={loss:.4f} "
+            f"[OURS][{epoch:03d}/{args.student_epochs:03d}] loss={loss:.4f} "
             f"ce={ce:.4f} align={alignment_loss:.4f} "
             f"fuse={fusion_loss:.4f} feature={feature_loss:.4f} "
             f"train_acc={train_accuracy:.2f}% val_acc={latest_accuracy:.2f}% "
@@ -589,7 +589,7 @@ def main() -> None:
     vanilla = VANILLA_TOP1[args.dataset][args.student]
     log("=" * 72)
     log(
-        f"[FINAL_RESULT] ibam_best_top1={best_accuracy:.2f}% "
+        f"[FINAL_RESULT] ours_best_top1={best_accuracy:.2f}% "
         f"vanilla_top1={vanilla:.2f}% "
         f"gain_over_vanilla={best_accuracy - vanilla:+.2f}pp"
     )
@@ -599,11 +599,11 @@ def main() -> None:
         f"estimated_total={format_duration(average_epoch * args.planned_epochs)} "
         f"elapsed={format_duration(elapsed)}"
     )
-    log(f"[AGGREGATION_FINAL] {top_aggregation_weights(ibam)}")
+    log(f"[AGGREGATION_FINAL] {top_aggregation_weights(ours)}")
     log(f"[FINAL_RESULT] best_checkpoint={best_checkpoint.resolve()}")
     log(f"[FINAL_RESULT] latest_checkpoint={latest_checkpoint.resolve()}")
     log(f"[FINAL_RESULT] summary={summary_path.resolve()}")
-    log("[DONE] IBAM training completed successfully; resources may be released.")
+    log("[DONE] Ours training completed successfully; resources may be released.")
 
 
 def cli_main() -> None:
@@ -613,7 +613,7 @@ def cli_main() -> None:
         log("=" * 72)
         log(f"[FATAL] {type(error).__name__}: {error}")
         traceback.print_exc()
-        log("[FATAL] IBAM training did not complete.")
+        log("[FATAL] Ours training did not complete.")
         raise
 
 
