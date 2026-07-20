@@ -56,8 +56,11 @@ Values in parentheses are gains over the corresponding Vanilla DeiT-Ti result.
 | ReviewKD | Full run complete | Full run complete | Full run complete |
 | MGD | Full run complete | Full run complete | Full run complete |
 | OFA | Full run complete | Full run complete | Full run complete |
+| IBAM (Ours) | Timing pending | Timing pending | Timing pending |
 
-The OFA matrix is complete. CIFAR-100 reached 66.18%, Flowers-102 reached 44.07%, and Chaoyang reached 80.04% at their selected best checkpoints.
+The five generic KD matrices are complete. IBAM (Ours) has passed local
+structural, backward, and checkpoint-reload checks; the next step is the
+CIFAR-100 two-epoch full-data timing run, followed by Flowers-102 and Chaoyang.
 
 ## 5. Exploratory runs outside Table 2
 

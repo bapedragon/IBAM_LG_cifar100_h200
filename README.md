@@ -68,6 +68,13 @@ methods/
     cifar100/{train.py,README.md}
     flowers102/{train.py,README.md}
     chaoyang/{train.py,README.md}
+  IBAM/
+    README.md
+    ibam.py
+    core.py
+    cifar100/{train.py,README.md}
+    flowers102/{train.py,README.md}
+    chaoyang/{train.py,README.md}
 train_teacher_cifar100.py
 train_teacher_flowers.py
 train_teacher_chaoyang.py
@@ -98,6 +105,10 @@ README.md
   documented ResNet-stage-to-DeiT-grid adapter and dataset-specific wrappers.
 - `methods/OFA/`: official-behavior-based adaptive target-enhancement loss and
   intermediate logit projectors for heterogeneous ResNet56-to-DeiT-Ti KD.
+- `methods/IBAM/`: the provided Ours feature-distillation source adapted to the
+  fixed ResNet56 teachers and all 12 DeiT-Ti patch-token grids. The source hash,
+  feature mapping, executable loss, and missing external beta controller are
+  documented explicitly.
 
 Legacy LG student training, LG checkpoint evaluation, the downloaded LG weight,
 and GitHub-token artifact upload experiments have been removed. H200 artifacts
@@ -128,6 +139,8 @@ The next official-code-based comparison is documented in
 [methods/MGD/README.md](methods/MGD/README.md).
 The final heterogeneous comparison is documented in
 [methods/OFA/README.md](methods/OFA/README.md).
+The Ours implementation and its three dataset wrappers are documented in
+[methods/IBAM/README.md](methods/IBAM/README.md).
 
 Current completed results. Table 2 now uses DeiT-Ti only; the other students
 below are retained as exploratory runs.
@@ -155,16 +168,16 @@ The consolidated teacher, full-run, timing-run, and progress tables are kept in
 | KD | CIFAR-100 | ConViT-Tiny | **73.59%** | 74.87% | -1.28pp |
 | KD | CIFAR-100 | PiT-Tiny | **72.22%** | 73.16% | -0.94pp |
 
-First full-data timing run:
+Next full-data timing run (IBAM/Ours):
 
 ```bash
-python methods/KD/cifar100/train.py --student deit_ti --timing-run --batch-size 128 --num-workers 4
+python methods/IBAM/cifar100/train.py --timing-run --num-workers 4
 ```
 
-First 300-epoch run after timing verification:
+First 300-epoch IBAM run after timing verification:
 
 ```bash
-python methods/KD/cifar100/train.py --student deit_ti --student-epochs 300 --batch-size 128 --num-workers 4 --output-dir /app/output
+python methods/IBAM/cifar100/train.py --student-epochs 300 --num-workers 4 --run-name ibam_cifar100_deit_ti_300ep --output-dir /app/output
 ```
 
 ## Environment

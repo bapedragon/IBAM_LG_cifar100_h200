@@ -12,6 +12,7 @@ methods/
   ReviewKD/            3/3 primary runs complete
   MGD/                 3/3 primary runs complete
   OFA/                 3/3 primary runs complete
+  IBAM/                Ours implementation ready for timing runs
 ```
 
 ## Fixed inputs
@@ -34,7 +35,7 @@ but they are not required for the primary Table-2 matrix.
 The previous draft incorrectly claimed one identical 300-epoch protocol across
 all datasets. The revised experiment policy uses a documented base protocol per
 dataset. Within one dataset, that protocol must remain identical across KD,
-CRD, ReviewKD, MGD, and OFA.
+CRD, ReviewKD, MGD, OFA, and IBAM (Ours).
 
 | Dataset | Epochs | Batch | Optimizer | LR | Warm-up | Schedule | Status |
 |---|---:|---:|---|---:|---:|---|---|
@@ -53,13 +54,15 @@ be recorded explicitly in each run summary.
 3. ReviewKD: requires a documented CNN-stage to ViT-token mapping.
 4. MGD: requires a documented token-grid reshape and feature adapter.
 5. OFA: heterogeneous architecture baseline.
+6. IBAM (Ours): provided grid-preserving feature alignment, deformable
+   attention, and convolutional cross-attention adapted to ResNet56-to-DeiT-Ti.
 
 Before each new method's first full run, validate one full-data timing run.
 
-OFA timing command example:
+IBAM timing command example:
 
 ```bash
-python methods/OFA/cifar100/train.py --timing-run --num-workers 4
+python methods/IBAM/cifar100/train.py --timing-run --num-workers 4
 ```
 
 ## Required output contract
